@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-11-17 Sat 20:51 -->
+<!-- 2018-11-21 Wed 10:22 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>DevOps: Setup and Running Everything under Cygwin on Windows</title>
@@ -270,346 +270,440 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga891222">1. Main Goal</a></li>
-<li><a href="#orgf9098d8">2. Setup Cygwin for DevOps</a>
+<li><a href="#org3d755dd">1. Intro</a></li>
+<li><a href="#org762cd5f">2. Main Goal</a></li>
+<li><a href="#orgbf9e6db">3. Setup Cygwin for DevOps</a>
 <ul>
-<li><a href="#orgdb758b9">2.1. Directory Structure after setup</a></li>
-<li><a href="#orgcbefae8">2.2. Installing Minimal Cygwin installation for DevOps</a></li>
-<li><a href="#org306f4bb">2.3. (Optional) Adding additional recommended software in a Cygwin DevOps environment</a></li>
-<li><a href="#org5491c51">2.4. Configuring Cygwin</a></li>
-<li><a href="#orgf2beba7">2.5. Installing Chocolatey</a></li>
-<li><a href="#orgf9f1f4e">2.6. Exit the Windows <code>cmd</code> command interpreter and start a Cygwin shell</a></li>
-<li><a href="#orgb9a0b8c">2.7. Emulate sudo access under Cygwin for Windows Administrator rights</a>
+<li><a href="#org051c8c9">3.1. Directory Structure after setup</a></li>
+<li><a href="#orge07944a">3.2. Installing Minimal Cygwin installation for DevOps</a></li>
+<li><a href="#org31a55aa">3.3. (Optional) Adding additional recommended software in a Cygwin DevOps environment</a></li>
+<li><a href="#orgaf0d14a">3.4. Configuring Cygwin</a></li>
+<li><a href="#org13ff6c1">3.5. Installing Chocolatey</a></li>
+<li><a href="#orgac5144b">3.6. Exit the Windows <code>cmd</code> command interpreter and start a Cygwin shell</a></li>
+<li><a href="#org0f0a1a3">3.7. Emulate sudo access under Cygwin for Windows Administrator rights</a>
 <ul>
-<li><a href="#orgc1e4f55">Create sudo wrapper scripts for command interpreters</a></li>
-<li><a href="#org8b5850e">Create convenience symbolic links to make our system look more Unix like</a></li>
+<li><a href="#org4116478">Create sudo wrapper scripts for command interpreters</a></li>
+<li><a href="#orgd81cba6">Create convenience symbolic links to make our system look more Unix like</a></li>
 </ul>
 </li>
-<li><a href="#org4387e30">2.8. Installing and Configuring Non-Cygwin tools with Chocolatey</a>
+<li><a href="#org0a58729">3.8. Installing and Configuring Non-Cygwin tools with Chocolatey</a>
 <ul>
-<li><a href="#org399eb04">Configuring Chocolatey</a></li>
-<li><a href="#org72a11d4">Installing VirtualBox</a></li>
-<li><a href="#orga11c164">Installing Packer</a></li>
-<li><a href="#orgeb39af3">Installing Vagrant</a></li>
-<li><a href="#orgc58a941">Configuring Vagrant</a>
+<li><a href="#org2677650">Configuring Chocolatey</a></li>
+<li><a href="#orgb1740e9">Installing VirtualBox</a></li>
+<li><a href="#orga0ccb65">Installing Packer</a></li>
+<li><a href="#org3e05a5a">Installing Vagrant</a></li>
+<li><a href="#org66f773b">Configuring Vagrant</a>
 <ul>
-<li><a href="#org041e8ab">Set the Vagrant home directory</a></li>
-<li><a href="#org08e437e">Create wrapper scripts around ansible commands</a></li>
+<li><a href="#org32e5c3a">Set the Vagrant home directory</a></li>
+<li><a href="#orgf03b50e">Create wrapper scripts around ansible commands</a></li>
 </ul>
 </li>
-<li><a href="#orgd094b16">Installing Terraform</a></li>
-<li><a href="#org61e3bf3">Installing Docker client</a></li>
-<li><a href="#org8b5d31c">Installing Docker-machine</a></li>
-<li><a href="#org898bdc1">Configuring Docker-machine</a></li>
-<li><a href="#org2a23bca">Installing Docker-compose</a></li>
-<li><a href="#orgb45758f">Installing Kubectl</a></li>
-<li><a href="#orgbc6633f">Configuring Kubectl</a></li>
-<li><a href="#org608be2c">Installing Minikube</a></li>
-<li><a href="#org311ee41">Configuring Minikube</a></li>
-<li><a href="#org906ed3f">Installing Minishift</a></li>
-<li><a href="#orgd92f046">Configuring Minishift</a></li>
-<li><a href="#org9943ae4">Upgrading choco installed packages</a></li>
+<li><a href="#org747cc69">Installing Terraform</a></li>
+<li><a href="#org8edb557">Installing Docker client</a></li>
+<li><a href="#orgee30e2f">Installing Docker-machine</a></li>
+<li><a href="#org216ed94">Configuring Docker-machine</a></li>
+<li><a href="#org3d522c1">Installing Docker-compose</a></li>
+<li><a href="#org46363b3">Installing Kubectl</a></li>
+<li><a href="#org478850f">Configuring Kubectl</a></li>
+<li><a href="#org441aba5">Installing Minikube</a></li>
+<li><a href="#org1e22e2a">Configuring Minikube</a></li>
+<li><a href="#orgfacc6f1">Installing Minishift</a></li>
+<li><a href="#orgedd1330">Configuring Minishift</a></li>
+<li><a href="#orgdd0d5f3">Upgrading choco installed packages</a></li>
 </ul>
 </li>
-<li><a href="#orgac30f19">2.9. (Optional) Installing "virtualenv" with pip</a></li>
-<li><a href="#org5103bde">2.10. Installing Ansible</a>
+<li><a href="#orgff82855">3.9. (Optional) Installing "virtualenv" with pip</a></li>
+<li><a href="#orgea0d963">3.10. Installing Ansible</a>
 <ul>
-<li><a href="#org198150d">Installing Ansible in "virtualenv"</a></li>
-<li><a href="#org8d6e12e">Installing Ansible in the main cygwin distribution</a></li>
+<li><a href="#orgdf65095">Installing Ansible in "virtualenv"</a></li>
+<li><a href="#org6689c18">Installing Ansible in the main cygwin distribution</a></li>
 </ul>
 </li>
-<li><a href="#org11ceef1">2.11. Configuring Ansible</a></li>
-<li><a href="#org9c6bbd8">2.12. Create wrapper scripts around Ansible commands for use with Vagrant</a>
+<li><a href="#org16270fa">3.11. Configuring Ansible</a></li>
+<li><a href="#org17094f0">3.12. Create wrapper scripts around Ansible commands for use with Vagrant</a>
 <ul>
-<li><a href="#org4f7e545">If you installed ansible in virtualenv</a></li>
-<li><a href="#org3c40c8b">If you installed ansible in your main cygwin installation</a></li>
+<li><a href="#org4b12610">If you installed ansible in virtualenv</a></li>
+<li><a href="#org9a3585c">If you installed ansible in your main cygwin installation</a></li>
 </ul>
 </li>
-<li><a href="#orgfd1e7dd">2.13. Upgrading Ansible (Only when necessary)</a></li>
+<li><a href="#org641358b">3.13. Upgrading Ansible (Only when necessary)</a></li>
 </ul>
 </li>
-<li><a href="#org56b730d">3. Using Packer</a>
+<li><a href="#orgab48646">4. Using Packer</a>
 <ul>
-<li><a href="#orga2c8160">3.1. Creating base VMs</a>
+<li><a href="#orgc7ce830">4.1. Creating base VMs</a>
 <ul>
-<li><a href="#orgeffa43f">Oracle Linux 7.5</a>
+<li><a href="#org9503de3">Oracle Linux 7.5</a>
 <ul>
-<li><a href="#orge38c05e">Download Oracle Linux DVD ISO image from Oracle</a></li>
-<li><a href="#org906b837">Kickstart file</a></li>
-<li><a href="#orgfebe0a0">Packer JSON script</a></li>
-<li><a href="#org87e06c4">Packer execution</a></li>
-<li><a href="#orgfe096bf">Resulting filesystem structure</a></li>
+<li><a href="#org0bb62b0">Download Oracle Linux DVD ISO image from Oracle</a></li>
+<li><a href="#orgde03234">Kickstart file</a></li>
+<li><a href="#org15a3916">Packer JSON script</a></li>
+<li><a href="#orga647ce2">Packer execution</a></li>
+<li><a href="#orga60e6a7">Resulting filesystem structure</a></li>
 </ul>
 </li>
-<li><a href="#org10d2d8e">Oracle Linux 7.5 with one additional data disk (NOT needed for this tutorial)</a>
+<li><a href="#org0f533ec">Oracle Linux 7.5 with one additional data disk (NOT needed for this tutorial)</a>
 <ul>
-<li><a href="#orgfe68798">Move Oracle Linux DVD ISO image into place</a></li>
-<li><a href="#org4d8de73">Kickstart file</a></li>
-<li><a href="#orgdea4c06">Packer JSON script</a></li>
-<li><a href="#org7578f4a">Create additional disk(s) with VBoxManage</a></li>
-<li><a href="#orgabde0fb">Packer execution</a></li>
-<li><a href="#org571979f">Resulting filesystem structure</a></li>
+<li><a href="#org8286d32">Move Oracle Linux DVD ISO image into place</a></li>
+<li><a href="#org111f052">Kickstart file</a></li>
+<li><a href="#org091eb68">Packer JSON script</a></li>
+<li><a href="#orgdca968c">Create additional disk(s) with VBoxManage</a></li>
+<li><a href="#org1686ac2">Packer execution</a></li>
+<li><a href="#orgb6b6b1b">Resulting filesystem structure</a></li>
 </ul>
 </li>
-<li><a href="#orgfcc012b">Oracle Linux 6.10 (NOT needed for this tutorial)</a>
+<li><a href="#org83dc4a9">Oracle Linux 6.10 (NOT needed for this tutorial)</a>
 <ul>
-<li><a href="#orgf11536f">Download Oracle Linux DVD ISO image from Oracle</a></li>
-<li><a href="#org8b9c984">Kickstart file</a></li>
-<li><a href="#orgddee066">Packer JSON script</a></li>
-<li><a href="#org64d16b5">Packer execution</a></li>
-<li><a href="#orgc18c3f5">Resulting filesystem structure</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#org9fb2c03">4. Using Ansible-Galaxy</a>
-<ul>
-<li><a href="#org012637c">4.1. Create roles for provisioning an Oracle Linux 7.5 system with GNOME Desktop and Docker support</a></li>
-</ul>
-</li>
-<li><a href="#orgf5de373">5. Using Vagrant</a>
-<ul>
-<li><a href="#org0eff6c2">5.1. Calling Vagrant commands</a>
-<ul>
-<li><a href="#orgdc629eb">vagrant</a></li>
-<li><a href="#org52a7dac">version</a></li>
-<li><a href="#org6f70a62">global-status</a></li>
-</ul>
-</li>
-<li><a href="#org17ab285">5.2. Building Vagrant base box for Oracle Linux 7.5</a>
-<ul>
-<li><a href="#orga436228">Rename the packer generated OVF file to box.ovf</a></li>
-<li><a href="#org0bd18fb">Create Vagrantfile</a></li>
-<li><a href="#orgc906252">Create Box Info File</a></li>
-<li><a href="#orgdc484d0">Create Box File for Provider</a></li>
-<li><a href="#org7dc1fb4">Directory structure</a></li>
-<li><a href="#org86545d5">Create Vagrant Box</a></li>
-<li><a href="#orgfd31b0a">Create Box Metadata File</a></li>
-<li><a href="#orgf4d8662">Add the box to the vagrant registry</a></li>
-<li><a href="#orge076331">Directory structure</a></li>
-<li><a href="#org6159022">Checking the vagrant registry</a></li>
-</ul>
-</li>
-<li><a href="#orge86922b">5.3. Building Vagrant base box for Oracle Linux 6.10</a>
-<ul>
-<li><a href="#orge2b29d0">Rename the packer generated OVF file to box.ovf</a></li>
-<li><a href="#org1f911fc">Vagrantfile</a></li>
-<li><a href="#org6aa9d06">Create Box Info File</a></li>
-<li><a href="#org2cbb97f">Create Box File for Provider</a></li>
-<li><a href="#org7d1419a">Create Vagrant Box</a></li>
-<li><a href="#orga98608f">Create Box Metadata File</a></li>
-<li><a href="#orgb70d633">Add the box to the vagrant registry</a></li>
-<li><a href="#orgf803f35">Directory structure</a></li>
-<li><a href="#orgfdaef80">Checking the vagrant registry</a></li>
-</ul>
-</li>
-<li><a href="#org2a4904d">5.4. Load Order and Merging of Vagrantfile files</a></li>
-<li><a href="#orgebe1824">5.5. Installing vbguest plugin</a></li>
-<li><a href="#org4919992">5.6. Building a Multinode Setup with Vagrant and Ansible based on a <b>yaml</b> input file</a>
-<ul>
-<li><a href="#org1cca590">Create the staging area which will be used during provisioning</a></li>
-<li><a href="#org544822e">Clone the vagrant-multihost repository from Opitz Bitbucket</a></li>
-<li><a href="#org474062b">Directory Structure</a></li>
-<li><a href="#org8348317">Create, start and provision the multinode setup</a></li>
-<li><a href="#orgc24d44d">Halting the multinode setup</a></li>
-<li><a href="#org8040e44">Destroying the multinode setup</a></li>
-</ul>
-</li>
-<li><a href="#org16d6cc9">5.7. If you're interested more in Docker than Ansible, you can go directly to the Docker chapter</a></li>
-</ul>
-</li>
-<li><a href="#orgc4a46e0">6. Using Ansible</a>
-<ul>
-<li><a href="#org8297df0">6.1. Download Software from Oracle to be provisioned by Ansible</a></li>
-<li><a href="#org4542b8c">6.2. Clone the ansible-oracle-fmw Repository from Opitz Bitbucket</a></li>
-<li><a href="#org2eeece9">6.3. Ansible Connection Tests</a></li>
-<li><a href="#org706b74a">6.4. Oracle Database and Grid Install with Ansible</a></li>
-<li><a href="#orgdd72e20">6.5. Oracle Fusion Middleware SOA-BPM install with Ansible</a>
-<ul>
-<li><a href="#org8ed1777">Setup AdminServer of the SOA-BPM-Domain</a></li>
-<li><a href="#org1e86f8a">Setup ManagedServers of the SOA-BPM-Domain</a></li>
+<li><a href="#org90b7004">Download Oracle Linux DVD ISO image from Oracle</a></li>
+<li><a href="#orgda9ac97">Kickstart file</a></li>
+<li><a href="#orgf79f268">Packer JSON script</a></li>
+<li><a href="#orgd8d19d3">Packer execution</a></li>
+<li><a href="#orgf3dbd71">Resulting filesystem structure</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orge6c2175">7. Using Docker</a>
-<ul>
-<li><a href="#orgdc21372">7.1. Create a docker account</a></li>
-<li><a href="#org1d8ed3b">7.2. Configure and test Docker installation inside the Linux guest in VirtualBox</a>
-<ul>
-<li><a href="#org8ff0b7c">Configuration</a></li>
-<li><a href="#orgb97c339">Test</a></li>
-<li><a href="#orgb90b1cb">Cleanup</a></li>
 </ul>
 </li>
-<li><a href="#org654bf48">7.3. Get Started with Docker on Linux guest in VirtualBox</a>
+<li><a href="#org5051c45">5. Using Ansible-Galaxy</a>
 <ul>
-<li><a href="#orgddf2b0a">Containers</a>
-<ul>
-<li><a href="#orge8d7805">Define a container with Dockerfile</a></li>
-<li><a href="#orgbe49451">The <b>app</b> itself</a></li>
-<li><a href="#orgd728734">Build the app</a></li>
-<li><a href="#orgc33b21b">Run and test the app</a></li>
-<li><a href="#org77c6a03">Share your image</a></li>
+<li><a href="#orgae89aec">5.1. Create roles for provisioning an Oracle Linux 7.5 system with GNOME Desktop and Docker support</a></li>
 </ul>
 </li>
-<li><a href="#orgcedc3d3">Cleanup</a>
+<li><a href="#org29f5499">6. Using Vagrant</a>
 <ul>
-<li><a href="#orgcdf1471">Kill all running containers</a></li>
-<li><a href="#org69d0536">Delete all stopped containers</a></li>
-<li><a href="#org1c6f736">Delete all images</a></li>
+<li><a href="#org3fc53d9">6.1. Calling Vagrant commands</a>
+<ul>
+<li><a href="#org5610855">vagrant</a></li>
+<li><a href="#org1b21e4a">version</a></li>
+<li><a href="#org5b1f169">global-status</a></li>
 </ul>
 </li>
-<li><a href="#orge3e9451">Exit from your Linux guest</a></li>
+<li><a href="#org18c7a9f">6.2. Building Vagrant base box for Oracle Linux 7.5</a>
+<ul>
+<li><a href="#org111a2ef">Rename the packer generated OVF file to box.ovf</a></li>
+<li><a href="#org9541cac">Create Vagrantfile</a></li>
+<li><a href="#orga0de982">Create Box Info File</a></li>
+<li><a href="#orgc60d6b6">Create Box File for Provider</a></li>
+<li><a href="#org090c3f2">Directory structure</a></li>
+<li><a href="#org3a96c54">Create Vagrant Box</a></li>
+<li><a href="#org93ba006">Create Box Metadata File</a></li>
+<li><a href="#orgf5fd565">Add the box to the vagrant registry</a></li>
+<li><a href="#orgeed99dc">Directory structure</a></li>
+<li><a href="#org414caba">Checking the vagrant registry</a></li>
 </ul>
 </li>
-<li><a href="#org7c81bd1">7.4. Get Started with Docker on Cygwin under Windows</a>
+<li><a href="#org6aa1823">6.3. Building Vagrant base box for Oracle Linux 6.10</a>
 <ul>
-<li><a href="#org82adf61">Create two machines (on Windows)</a></li>
-<li><a href="#org8a0cb89">Docker machine shell environment on Cygwin</a></li>
-<li><a href="#orgab145df">Containers</a>
-<ul>
-<li><a href="#org4e94411">Define a container with Dockerfile</a></li>
-<li><a href="#org13d76cf">The <b>app</b> itself</a></li>
-<li><a href="#orgf249a0d">Build the app</a></li>
-<li><a href="#orge8b9e72">Run the app on the first machine</a></li>
-<li><a href="#orgbf53a90">Pull and run the image from the remote repository on the second machine</a></li>
+<li><a href="#orga299e40">Rename the packer generated OVF file to box.ovf</a></li>
+<li><a href="#orgdb5b955">Vagrantfile</a></li>
+<li><a href="#org47d44ab">Create Box Info File</a></li>
+<li><a href="#org82d1c31">Create Box File for Provider</a></li>
+<li><a href="#org0750579">Create Vagrant Box</a></li>
+<li><a href="#org469d7b8">Create Box Metadata File</a></li>
+<li><a href="#org3992721">Add the box to the vagrant registry</a></li>
+<li><a href="#orge86e743">Directory structure</a></li>
+<li><a href="#org054ba65">Checking the vagrant registry</a></li>
 </ul>
 </li>
-<li><a href="#org80d0beb">Services</a>
+<li><a href="#org030cb78">6.4. Load Order and Merging of Vagrantfile files</a></li>
+<li><a href="#org193a9cd">6.5. Installing vbguest plugin</a></li>
+<li><a href="#orga4102e2">6.6. Building a Multinode Setup with Vagrant and Ansible based on a <b>yaml</b> input file</a>
 <ul>
-<li><a href="#org8e7ea5d">Your first docker-compose.yml file</a></li>
-<li><a href="#org4c4ba96">Run your new load-balanced app</a></li>
-<li><a href="#orgd32df9d">Scale the app</a></li>
-<li><a href="#org5686801">Take down the app and the swarm</a></li>
+<li><a href="#org7cbc896">Create the staging area which will be used during provisioning</a></li>
+<li><a href="#org543faad">Clone the vagrant-multihost repository from Opitz Bitbucket</a></li>
+<li><a href="#org1febd66">Directory Structure</a></li>
+<li><a href="#orge8f9062">Create, start and provision the multinode setup</a></li>
+<li><a href="#orgf6e6c66">Halting the multinode setup</a></li>
+<li><a href="#org19454bf">Destroying the multinode setup</a></li>
 </ul>
 </li>
-<li><a href="#orgb4ad7b9">Swarms</a>
-<ul>
-<li><a href="#orgb7e247b">Set up your swarm</a></li>
-<li><a href="#orge55985a">Deploy your app on the swarm cluster</a></li>
+<li><a href="#org26f0fce">6.7. If you're interested more in Docker than Ansible, you can go directly to the Docker chapter</a></li>
 </ul>
 </li>
-<li><a href="#org560cae4">Stacks</a>
+<li><a href="#orgdb0bb9b">7. Using Ansible</a>
 <ul>
-<li><a href="#org102c652">Prerequisites</a></li>
-<li><a href="#orgba4a236">Add a new service and redeploy</a></li>
-<li><a href="#org3f75137">Persist the data</a></li>
-</ul>
-</li>
-<li><a href="#orge69ebb4">Deploy your app on a cloud provider</a></li>
-<li><a href="#orgc217e05">Cleanup</a></li>
-<li><a href="#orgfee0d58">Recap</a></li>
-</ul>
-</li>
-<li><a href="#org7cc2895">7.5. First steps with provisioning of Docker containers using Vagrant as provider</a></li>
-<li><a href="#org533923b">7.6. Java 9 - running Docker container in VirtualBox VM on Windows 10 courtesy of Vagrant</a></li>
-<li><a href="#org86ca187">7.7. Vagrant Provisioning with Docker - Provisioning Virtual Systems with Docker</a>
+<li><a href="#orgc5dcabc">7.1. Download Software from Oracle to be provisioned by Ansible</a></li>
+<li><a href="#orgb383166">7.2. Clone the ansible-oracle-fmw Repository from Opitz Bitbucket</a></li>
+<li><a href="#org3366c1e">7.3. Ansible Connection Tests</a></li>
+<li><a href="#orgfafaf3e">7.4. Oracle Database and Grid Install with Ansible</a></li>
+<li><a href="#org13d6336">7.5. Oracle Fusion Middleware SOA-BPM install with Ansible</a>
 <ul>
-<li><a href="#orga5bef27">Building Docker Image</a></li>
-<li><a href="#org74d15ce">Using Existing Image</a></li>
+<li><a href="#orgf3a25b6">Setup AdminServer of the SOA-BPM-Domain</a></li>
+<li><a href="#org5871a88">Setup ManagedServers of the SOA-BPM-Domain</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga0166a1">8. Using Kubernetes</a>
+<li><a href="#org34eddd0">8. Using Docker</a>
 <ul>
-<li><a href="#org7592ea8">8.1. Creating Singlenode Kubernetes Cluster with Minikube running in VirtualBox on Windows</a>
+<li><a href="#org2b1ce4e">8.1. Create a docker account</a></li>
+<li><a href="#orga1bcbca">8.2. Configure and test Docker installation inside the Linux guest in VirtualBox</a>
 <ul>
-<li><a href="#org7e86881">Help</a></li>
-<li><a href="#org798bd22">Starting the cluster</a></li>
-<li><a href="#org89b2b1d">Kubernetes Client and Server version</a></li>
-<li><a href="#org6c39fe8">Cluster IP address</a></li>
-<li><a href="#org6b13e7a">Kubernetes Dashboard</a></li>
-<li><a href="#orgec720a0">Running a workloads</a></li>
-<li><a href="#org6c331f9">Expose a service</a></li>
-<li><a href="#org277653e">Scaling the service</a></li>
-<li><a href="#org1490d78">Stopping the Cluster</a></li>
-<li><a href="#orgee12159">Deleting the Cluster</a></li>
+<li><a href="#org2a0def1">Configuration</a></li>
+<li><a href="#org2764487">Test</a></li>
+<li><a href="#org685bb1f">Cleanup</a></li>
 </ul>
 </li>
-<li><a href="#org3cfabfe">8.2. Creating Multinode Kubernetes Cluster with Oracle Linux 7 running in VirtualBox on Windows</a>
+<li><a href="#org8dff308">8.3. Get Started with Docker on Linux guest in VirtualBox</a>
 <ul>
-<li><a href="#orge20b26c">Create an Oracle Account</a></li>
-<li><a href="#org5477ab8">Agree to and accept the Oracle Standard Terms and Restrictions</a></li>
-<li><a href="#org85441ba">Clone the Oracle vagrant-boxes project</a></li>
-<li><a href="#orgbf3dc93">Install Master</a></li>
-<li><a href="#org6241217">Install Worker1</a></li>
-<li><a href="#org624fbeb">Install Worker2</a></li>
-<li><a href="#org881f42d">Check the Cluster from the Master node</a></li>
-<li><a href="#org30744a6">Check the Cluster from the Windows host</a></li>
-<li><a href="#orgab6bffc">Halting the clusters</a></li>
-<li><a href="#orgde4648a">Destroying the clusters</a></li>
-</ul>
-</li>
-<li><a href="#org17d97d5">8.3. Docs</a></li>
-</ul>
-</li>
-<li><a href="#orgd3ed921">9. Using Openshift</a>
+<li><a href="#orgcbcaf6d">Containers</a>
 <ul>
-<li><a href="#orgacf6685">9.1. Using Minishift - An OpenShift Origin All-in-One VM</a></li>
+<li><a href="#org1bab70b">Define a container with Dockerfile</a></li>
+<li><a href="#org367dc04">The <b>app</b> itself</a></li>
+<li><a href="#org0e9739c">Build the app</a></li>
+<li><a href="#orgf2f7299">Run and test the app</a></li>
+<li><a href="#orge38e676">Share your image</a></li>
 </ul>
 </li>
-<li><a href="#org9fc889f">10. Using Git</a>
+<li><a href="#org2187733">Cleanup</a>
 <ul>
-<li><a href="#orgb519f7a">10.1. Bitbucket (Opitz)</a>
+<li><a href="#org3dde00c">Kill all running containers</a></li>
+<li><a href="#org5627a25">Delete all stopped containers</a></li>
+<li><a href="#org5704c56">Delete all images</a></li>
+</ul>
+</li>
+<li><a href="#orga51e90a">Exit from your Linux guest</a></li>
+</ul>
+</li>
+<li><a href="#orgbde8a2d">8.4. Get Started with Docker on Cygwin under Windows</a>
 <ul>
-<li><a href="#org2736368">Create an account</a></li>
-<li><a href="#org0671582">Generating a new SSH key</a></li>
-<li><a href="#org17acbca">Adding your SSH key to the ssh-agent</a></li>
-</ul>
-</li>
-<li><a href="#org568401c">10.2. Working with repositories</a>
+<li><a href="#org2bd24a8">Create two machines (on Windows)</a></li>
+<li><a href="#org39ab16e">Docker machine shell environment on Cygwin</a></li>
+<li><a href="#orgd37c5e0">Containers</a>
 <ul>
-<li><a href="#orgd5c7b48">Create a repository</a></li>
-<li><a href="#org798a444">My code is ready to be pushed</a></li>
-<li><a href="#org35f7c06">Testing your SSH connection</a></li>
+<li><a href="#org65eede6">Define a container with Dockerfile</a></li>
+<li><a href="#orga6f8ae3">The <b>app</b> itself</a></li>
+<li><a href="#org0743557">Build the app</a></li>
+<li><a href="#org42d4af1">Run the app on the first machine</a></li>
+<li><a href="#org168a034">Pull and run the image from the remote repository on the second machine</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#orga2684d2">11. ToDo</a>
+<li><a href="#org920d505">Services</a>
 <ul>
-<li><a href="#org4076b81">11.1. Atomic Developer Bundle</a></li>
-<li><a href="#org5f4d30b">11.2. Ansible Container</a></li>
-<li><a href="#org71a1ccb">11.3. OpenShift-Ansible</a></li>
-<li><a href="#org8981424">11.4. OpenShift Origin</a></li>
+<li><a href="#orgef6add4">Your first docker-compose.yml file</a></li>
+<li><a href="#org75770d4">Run your new load-balanced app</a></li>
+<li><a href="#org2290b7e">Scale the app</a></li>
+<li><a href="#org33828bc">Take down the app and the swarm</a></li>
 </ul>
 </li>
-<li><a href="#org4aa468f">12. Misc</a>
+<li><a href="#org413dc55">Swarms</a>
 <ul>
-<li><a href="#orgc3d5bf1">12.1. Installing the Windows Subsystem for Linux</a>
+<li><a href="#orgf903731">Set up your swarm</a></li>
+<li><a href="#org7a9f1fc">Deploy your app on the swarm cluster</a></li>
+</ul>
+</li>
+<li><a href="#org43a8cf8">Stacks</a>
 <ul>
-<li><a href="#org8c9efb2">Enable the Windows Subsystem Linux (WLS)</a>
+<li><a href="#org3212f47">Prerequisites</a></li>
+<li><a href="#orgc899cbd">Add a new service and redeploy</a></li>
+<li><a href="#org68dd956">Persist the data</a></li>
+</ul>
+</li>
+<li><a href="#org5d813ec">Deploy your app on a cloud provider</a></li>
+<li><a href="#org510ce89">Cleanup</a></li>
+<li><a href="#org3546e69">Recap</a></li>
+</ul>
+</li>
+<li><a href="#org02bccd7">8.5. First steps with provisioning of Docker containers using Vagrant as provider</a></li>
+<li><a href="#org65f0211">8.6. Java 9 - running Docker container in VirtualBox VM on Windows 10 courtesy of Vagrant</a></li>
+<li><a href="#org87ced9a">8.7. Vagrant Provisioning with Docker - Provisioning Virtual Systems with Docker</a>
 <ul>
-<li><a href="#org334c783">Ubuntu</a></li>
-<li><a href="#org0179c70">Debian GNU/Linux</a></li>
-<li><a href="#orgc6d1be4">Kali Linux</a></li>
-<li><a href="#orge7df7db">OpenSUSE</a></li>
-<li><a href="#org4146a37">SLES</a></li>
+<li><a href="#org57f86a4">Building Docker Image</a></li>
+<li><a href="#org1aedb9e">Using Existing Image</a></li>
 </ul>
 </li>
-<li><a href="#org09136cf">Initialize</a></li>
-<li><a href="#orgdb82d56">winpty</a></li>
-<li><a href="#org125dfdb">Symlinks</a></li>
-<li><a href="#org1535ee8">Managed distros</a></li>
-<li><a href="#org558e660">Unregistering a distro</a></li>
-<li><a href="#org3fccba8">Call WSL from emacs running in Cygwin</a></li>
 </ul>
 </li>
-<li><a href="#org3ca7f73">12.2. Switching between Docker for Windows and VirtualBox on Windows 10</a></li>
+<li><a href="#orgc5bc5da">9. Using Kubernetes</a>
+<ul>
+<li><a href="#orgc309acc">9.1. Creating Singlenode Kubernetes Cluster with Minikube running in VirtualBox on Windows</a>
+<ul>
+<li><a href="#org1079203">Help</a></li>
+<li><a href="#org25d23eb">Starting the cluster</a></li>
+<li><a href="#org66c3002">Kubernetes Client and Server version</a></li>
+<li><a href="#orgbd5cc0c">Cluster IP address</a></li>
+<li><a href="#org91258dc">Kubernetes Dashboard</a></li>
+<li><a href="#orgaa20a8f">Running a workloads</a></li>
+<li><a href="#org577120c">Expose a service</a></li>
+<li><a href="#org3378533">Scaling the service</a></li>
+<li><a href="#orgc966749">Stopping the Cluster</a></li>
+<li><a href="#orgfde4494">Deleting the Cluster</a></li>
 </ul>
 </li>
-<li><a href="#org32d881e">13. Test</a></li>
+<li><a href="#orgbe7e4c4">9.2. Creating Multinode Kubernetes Cluster with Oracle Linux 7 running in VirtualBox on Windows</a>
+<ul>
+<li><a href="#org97f8564">Create an Oracle Account</a></li>
+<li><a href="#org2dd311e">Agree to and accept the Oracle Standard Terms and Restrictions</a></li>
+<li><a href="#orgc23553e">Clone the Oracle vagrant-boxes project</a></li>
+<li><a href="#org38b56a8">Install Master</a></li>
+<li><a href="#org6f2a6fb">Install Worker1</a></li>
+<li><a href="#orgdc9ba4e">Install Worker2</a></li>
+<li><a href="#org8c10fd7">Check the Cluster from the Master node</a></li>
+<li><a href="#org8caac65">Check the Cluster from the Windows host</a></li>
+<li><a href="#org21e7ea2">Halting the clusters</a></li>
+<li><a href="#orge8baeb1">Destroying the clusters</a></li>
+</ul>
+</li>
+<li><a href="#org48bbc65">9.3. Docs</a></li>
+</ul>
+</li>
+<li><a href="#orgb39ca23">10. Using Openshift</a>
+<ul>
+<li><a href="#orgaef8d0d">10.1. Using Minishift - An OpenShift Origin All-in-One VM</a></li>
+</ul>
+</li>
+<li><a href="#org42efd15">11. Using Git</a>
+<ul>
+<li><a href="#orge80cfc5">11.1. Bitbucket (Opitz)</a>
+<ul>
+<li><a href="#org69b40ef">Create an account</a></li>
+<li><a href="#orgbc7a1a8">Generating a new SSH key</a></li>
+<li><a href="#orge5bfebb">Adding your SSH key to the ssh-agent</a></li>
+</ul>
+</li>
+<li><a href="#org2638301">11.2. Working with repositories</a>
+<ul>
+<li><a href="#orge89964a">Create a repository</a></li>
+<li><a href="#org1491cce">My code is ready to be pushed</a></li>
+<li><a href="#org22da3c6">Testing your SSH connection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org8e5be85">12. ToDo</a>
+<ul>
+<li><a href="#org65e61b7">12.1. Atomic Developer Bundle</a></li>
+<li><a href="#orgfaa4b0c">12.2. Ansible Container</a></li>
+<li><a href="#orgc3a5920">12.3. OpenShift-Ansible</a></li>
+<li><a href="#org32ca974">12.4. OpenShift Origin</a></li>
+</ul>
+</li>
+<li><a href="#orgc518d19">13. Misc</a>
+<ul>
+<li><a href="#org14e0275">13.1. Installing the Windows Subsystem for Linux</a>
+<ul>
+<li><a href="#org54c396a">Enable the Windows Subsystem Linux (WLS)</a>
+<ul>
+<li><a href="#org7406517">Ubuntu</a></li>
+<li><a href="#org7089cb5">Debian GNU/Linux</a></li>
+<li><a href="#org94b055a">Kali Linux</a></li>
+<li><a href="#org161c2b7">OpenSUSE</a></li>
+<li><a href="#orge3542e1">SLES</a></li>
+</ul>
+</li>
+<li><a href="#orgf146d26">Initialize</a></li>
+<li><a href="#org69b49be">winpty</a></li>
+<li><a href="#org6c535b9">Symlinks</a></li>
+<li><a href="#org18388cb">Managed distros</a></li>
+<li><a href="#org1381d9e">Unregistering a distro</a></li>
+<li><a href="#org898b062">Call WSL from emacs running in Cygwin</a></li>
+</ul>
+</li>
+<li><a href="#orga5e1065">13.2. Switching between Docker for Windows and VirtualBox on Windows 10</a></li>
+</ul>
+</li>
+<li><a href="#org3a66191">14. Test</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga891222" class="outline-2">
-<h2 id="orga891222"><span class="section-number-2">1</span> Main Goal</h2>
+<div id="outline-container-org3d755dd" class="outline-2">
+<h2 id="org3d755dd"><span class="section-number-2">1</span> Intro</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+This website has been created with <a href="https://www.gnu.org/software/emacs/">Emacs</a> <a href="https://orgmode.org/">org-mode</a> and the help of
+<a href="https://github.com/vzell/org-html-themes">org-html-themes</a> during export.
+</p>
+
+<p>
+Keyboard shortcuts to save time and boost your productivity during reading of
+this <b>website</b>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Shortcut</th>
+<th scope="col" class="org-left">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>?</code> or <code>h</code></td>
+<td class="org-left">Access the <b>dashboard</b></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>n</code></td>
+<td class="org-left">Move to the <b>next</b> main heading</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>p</code></td>
+<td class="org-left">Move to the <b>previous</b> main heading</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>b</code></td>
+<td class="org-left">Scroll up</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>&lt;</code></td>
+<td class="org-left">Scroll to top</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>&gt;</code></td>
+<td class="org-left">Scroll to bottom</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>-</code></td>
+<td class="org-left">Collapse all</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>+</code></td>
+<td class="org-left">Expand all</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>r</code></td>
+<td class="org-left">Go to next task in list</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>R</code></td>
+<td class="org-left">Go to previous task in list</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>q</code></td>
+<td class="org-left">Stop reviewing the list of tasks</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>g</code></td>
+<td class="org-left">Reload the page</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-org762cd5f" class="outline-2">
+<h2 id="org762cd5f"><span class="section-number-2">2</span> Main Goal</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 The main goal of this project is to run the different DevOps related toolchains
 under <b>Cygwin</b>. It makes it possible to also use tools like <b>Ansible</b> which are not
@@ -635,13 +729,13 @@ tools and applications that provide a Unix-like look and feel.
 </div>
 
 
-<div id="outline-container-orgf9098d8" class="outline-2">
-<h2 id="orgf9098d8"><span class="section-number-2">2</span> Setup Cygwin for DevOps</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgbf9e6db" class="outline-2">
+<h2 id="orgbf9e6db"><span class="section-number-2">3</span> Setup Cygwin for DevOps</h2>
+<div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgdb758b9" class="outline-3">
-<h3 id="orgdb758b9"><span class="section-number-3">2.1</span> Directory Structure after setup</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-org051c8c9" class="outline-3">
+<h3 id="org051c8c9"><span class="section-number-3">3.1</span> Directory Structure after setup</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 We assume <b>everything</b> Cygwin related will be installed/configured under the <code>D:</code> drive. This gives us a really nice Unix look and feel,
 </p>
@@ -701,9 +795,9 @@ C:\ProgramData\chocolatey&gt;
 </div>
 </div>
 
-<div id="outline-container-orgcbefae8" class="outline-3">
-<h3 id="orgcbefae8"><span class="section-number-3">2.2</span> Installing Minimal Cygwin installation for DevOps</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orge07944a" class="outline-3">
+<h3 id="orge07944a"><span class="section-number-3">3.2</span> Installing Minimal Cygwin installation for DevOps</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 <a href="http://cygwin.com">http://cygwin.com</a>
 </p>
@@ -907,9 +1001,9 @@ Ending cygwin install
 </div>
 </div>
 
-<div id="outline-container-org306f4bb" class="outline-3">
-<h3 id="org306f4bb"><span class="section-number-3">2.3</span> (Optional) Adding additional recommended software in a Cygwin DevOps environment</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-org31a55aa" class="outline-3">
+<h3 id="org31a55aa"><span class="section-number-3">3.3</span> (Optional) Adding additional recommended software in a Cygwin DevOps environment</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 The next statement would install an X-Server and Emacs as <b>THE</b> editor&#x2026;.
 </p>
@@ -934,9 +1028,9 @@ statement and add the package(s) found by the <b>Cygwin Package Search</b> to th
 </div>
 </div>
 
-<div id="outline-container-org5491c51" class="outline-3">
-<h3 id="org5491c51"><span class="section-number-3">2.4</span> Configuring Cygwin</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgaf0d14a" class="outline-3">
+<h3 id="orgaf0d14a"><span class="section-number-3">3.4</span> Configuring Cygwin</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 There should be a <code>Cygwin64 Terminal</code> icon on the desktop which starts <b>Mintty</b>
 the default terminal emulator for Cygwin. Double click the icon. The first time
@@ -1002,9 +1096,9 @@ To make the entries active in your current shell, call the following
 </div>
 </div>
 
-<div id="outline-container-orgf2beba7" class="outline-3">
-<h3 id="orgf2beba7"><span class="section-number-3">2.5</span> Installing Chocolatey</h3>
-<div class="outline-text-3" id="text-2-5">
+<div id="outline-container-org13ff6c1" class="outline-3">
+<h3 id="org13ff6c1"><span class="section-number-3">3.5</span> Installing Chocolatey</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
 <a href="https://chocolatey.org/">https://chocolatey.org/</a>
 </p>
@@ -1067,9 +1161,9 @@ Ensuring chocolatey.nupkg is in the lib folder
 </div>
 </div>
 
-<div id="outline-container-orgf9f1f4e" class="outline-3">
-<h3 id="orgf9f1f4e"><span class="section-number-3">2.6</span> Exit the Windows <code>cmd</code> command interpreter and start a Cygwin shell</h3>
-<div class="outline-text-3" id="text-2-6">
+<div id="outline-container-orgac5144b" class="outline-3">
+<h3 id="orgac5144b"><span class="section-number-3">3.6</span> Exit the Windows <code>cmd</code> command interpreter and start a Cygwin shell</h3>
+<div class="outline-text-3" id="text-3-6">
 <p>
 Type
 </p>
@@ -1091,9 +1185,9 @@ From now on we will do everything the Unix way in a <b>bash</b> shell inside min
 </div>
 </div>
 
-<div id="outline-container-orgb9a0b8c" class="outline-3">
-<h3 id="orgb9a0b8c"><span class="section-number-3">2.7</span> Emulate sudo access under Cygwin for Windows Administrator rights</h3>
-<div class="outline-text-3" id="text-2-7">
+<div id="outline-container-org0f0a1a3" class="outline-3">
+<h3 id="org0f0a1a3"><span class="section-number-3">3.7</span> Emulate sudo access under Cygwin for Windows Administrator rights</h3>
+<div class="outline-text-3" id="text-3-7">
 <p>
 As a preparation for installing progams with <code>chocolatey</code> from the cygwin bash,
 which do not exist as a native cygwin version, we setup a Unix sudo emulation
@@ -1102,9 +1196,9 @@ installation.
 </p>
 </div>
 
-<div id="outline-container-orgc1e4f55" class="outline-4">
-<h4 id="orgc1e4f55">Create sudo wrapper scripts for command interpreters</h4>
-<div class="outline-text-4" id="text-orgc1e4f55">
+<div id="outline-container-org4116478" class="outline-4">
+<h4 id="org4116478">Create sudo wrapper scripts for command interpreters</h4>
+<div class="outline-text-4" id="text-org4116478">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /usr/local/bin
 </pre>
@@ -1154,9 +1248,9 @@ chmod 755 /usr/local/bin/supowershell
 </div>
 </div>
 
-<div id="outline-container-org8b5850e" class="outline-4">
-<h4 id="org8b5850e">Create convenience symbolic links to make our system look more Unix like</h4>
-<div class="outline-text-4" id="text-org8b5850e">
+<div id="outline-container-orgd81cba6" class="outline-4">
+<h4 id="orgd81cba6">Create convenience symbolic links to make our system look more Unix like</h4>
+<div class="outline-text-4" id="text-orgd81cba6">
 <div class="org-src-container">
 <pre class="src src-bash">ln -s /cygdrive/c/ProgramData/chocolatey/bin/choco /usr/local/bin/choco
 </pre>
@@ -1175,13 +1269,13 @@ chmod 755 /usr/local/bin/supowershell
 </div>
 </div>
 
-<div id="outline-container-org4387e30" class="outline-3">
-<h3 id="org4387e30"><span class="section-number-3">2.8</span> Installing and Configuring Non-Cygwin tools with Chocolatey</h3>
-<div class="outline-text-3" id="text-2-8">
+<div id="outline-container-org0a58729" class="outline-3">
+<h3 id="org0a58729"><span class="section-number-3">3.8</span> Installing and Configuring Non-Cygwin tools with Chocolatey</h3>
+<div class="outline-text-3" id="text-3-8">
 </div>
-<div id="outline-container-org399eb04" class="outline-4">
-<h4 id="org399eb04">Configuring Chocolatey</h4>
-<div class="outline-text-4" id="text-org399eb04">
+<div id="outline-container-org2677650" class="outline-4">
+<h4 id="org2677650">Configuring Chocolatey</h4>
+<div class="outline-text-4" id="text-org2677650">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">type</span> choco
 </pre>
@@ -1211,9 +1305,9 @@ chmod 755 /usr/local/bin/supowershell
 </pre>
 </div>
 </div>
-<div id="outline-container-org72a11d4" class="outline-4">
-<h4 id="org72a11d4">Installing VirtualBox</h4>
-<div class="outline-text-4" id="text-org72a11d4">
+<div id="outline-container-orgb1740e9" class="outline-4">
+<h4 id="orgb1740e9">Installing VirtualBox</h4>
+<div class="outline-text-4" id="text-orgb1740e9">
 <div class="org-src-container">
 <pre class="src src-bash">choco info virtualbox
 </pre>
@@ -1643,9 +1737,9 @@ Create convenience symbolic link to VBoxManage.
 </div>
 </div>
 
-<div id="outline-container-orga11c164" class="outline-4">
-<h4 id="orga11c164">Installing Packer</h4>
-<div class="outline-text-4" id="text-orga11c164">
+<div id="outline-container-orga0ccb65" class="outline-4">
+<h4 id="orga0ccb65">Installing Packer</h4>
+<div class="outline-text-4" id="text-orga0ccb65">
 <div class="org-src-container">
 <pre class="src src-bash">choco info packer
 </pre>
@@ -1714,9 +1808,9 @@ Create convenience symbolic link to VBoxManage.
 </div>
 </div>
 
-<div id="outline-container-orgeb39af3" class="outline-4">
-<h4 id="orgeb39af3">Installing Vagrant</h4>
-<div class="outline-text-4" id="text-orgeb39af3">
+<div id="outline-container-org3e05a5a" class="outline-4">
+<h4 id="org3e05a5a">Installing Vagrant</h4>
+<div class="outline-text-4" id="text-org3e05a5a">
 <div class="org-src-container">
 <pre class="src src-bash">choco info vagrant
 </pre>
@@ -1828,9 +1922,9 @@ we already have <code>/opt/vagrant/bin</code> in our <b>PATH</b>
 </div>
 </div>
 
-<div id="outline-container-orgc58a941" class="outline-4">
-<h4 id="orgc58a941">Configuring Vagrant</h4>
-<div class="outline-text-4" id="text-orgc58a941">
+<div id="outline-container-org66f773b" class="outline-4">
+<h4 id="org66f773b">Configuring Vagrant</h4>
+<div class="outline-text-4" id="text-org66f773b">
 <div class="info">
 <p>
 Remember that <b>Vagrant</b> itself is a native Windows program so we must create some workarounds to make it work under <b>Cygwin</b>.
@@ -1839,9 +1933,9 @@ Remember that <b>Vagrant</b> itself is a native Windows program so we must creat
 </div>
 </div>
 
-<div id="outline-container-org041e8ab" class="outline-5">
-<h5 id="org041e8ab">Set the Vagrant home directory</h5>
-<div class="outline-text-5" id="text-org041e8ab">
+<div id="outline-container-org32e5c3a" class="outline-5">
+<h5 id="org32e5c3a">Set the Vagrant home directory</h5>
+<div class="outline-text-5" id="text-org32e5c3a">
 <div class="info">
 <p>
 If you followed the step to setup cygwin by adding/changing all tutorial related
@@ -1874,9 +1968,9 @@ actually become quite large on disk.
 </div>
 </div>
 
-<div id="outline-container-org08e437e" class="outline-5">
-<h5 id="org08e437e">Create wrapper scripts around ansible commands</h5>
-<div class="outline-text-5" id="text-org08e437e">
+<div id="outline-container-orgf03b50e" class="outline-5">
+<h5 id="orgf03b50e">Create wrapper scripts around ansible commands</h5>
+<div class="outline-text-5" id="text-orgf03b50e">
 <p>
 Because we are using the cygwin version of <b>Ansible</b>, commands like
 <b>ansible-playbook</b>, which are used internally by the Windows version of <b>Vagrant</b>
@@ -1892,9 +1986,9 @@ We will do this step after the installation of <b>virtualenv</b>.
 </div>
 </div>
 
-<div id="outline-container-orgd094b16" class="outline-4">
-<h4 id="orgd094b16">Installing Terraform</h4>
-<div class="outline-text-4" id="text-orgd094b16">
+<div id="outline-container-org747cc69" class="outline-4">
+<h4 id="org747cc69">Installing Terraform</h4>
+<div class="outline-text-4" id="text-org747cc69">
 <div class="org-src-container">
 <pre class="src src-bash">choco info terraform
 </pre>
@@ -2000,9 +2094,9 @@ We will do this step after the installation of <b>virtualenv</b>.
 </div>
 </div>
 
-<div id="outline-container-org61e3bf3" class="outline-4">
-<h4 id="org61e3bf3">Installing Docker client</h4>
-<div class="outline-text-4" id="text-org61e3bf3">
+<div id="outline-container-org8edb557" class="outline-4">
+<h4 id="org8edb557">Installing Docker client</h4>
+<div class="outline-text-4" id="text-org8edb557">
 <div class="org-src-container">
 <pre class="src src-bash">choco info docker
 </pre>
@@ -2073,9 +2167,9 @@ We will do this step after the installation of <b>virtualenv</b>.
 </div>
 </div>
 
-<div id="outline-container-org8b5d31c" class="outline-4">
-<h4 id="org8b5d31c">Installing Docker-machine</h4>
-<div class="outline-text-4" id="text-org8b5d31c">
+<div id="outline-container-orgee30e2f" class="outline-4">
+<h4 id="orgee30e2f">Installing Docker-machine</h4>
+<div class="outline-text-4" id="text-orgee30e2f">
 <div class="org-src-container">
 <pre class="src src-bash">choco info docker-machine
 </pre>
@@ -2146,9 +2240,9 @@ We will do this step after the installation of <b>virtualenv</b>.
 </div>
 </div>
 
-<div id="outline-container-org898bdc1" class="outline-4">
-<h4 id="org898bdc1">Configuring Docker-machine</h4>
-<div class="outline-text-4" id="text-org898bdc1">
+<div id="outline-container-org216ed94" class="outline-4">
+<h4 id="org216ed94">Configuring Docker-machine</h4>
+<div class="outline-text-4" id="text-org216ed94">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/docker/.docker
 </pre>
@@ -2185,9 +2279,9 @@ Virtualbox machines. This can actually become quite large on disk.
 </div>
 </div>
 
-<div id="outline-container-org2a23bca" class="outline-4">
-<h4 id="org2a23bca">Installing Docker-compose</h4>
-<div class="outline-text-4" id="text-org2a23bca">
+<div id="outline-container-org3d522c1" class="outline-4">
+<h4 id="org3d522c1">Installing Docker-compose</h4>
+<div class="outline-text-4" id="text-org3d522c1">
 <div class="org-src-container">
 <pre class="src src-bash">choco info docker-compose
 </pre>
@@ -2253,9 +2347,9 @@ Virtualbox machines. This can actually become quite large on disk.
 </div>
 </div>
 
-<div id="outline-container-orgb45758f" class="outline-4">
-<h4 id="orgb45758f">Installing Kubectl</h4>
-<div class="outline-text-4" id="text-orgb45758f">
+<div id="outline-container-org46363b3" class="outline-4">
+<h4 id="org46363b3">Installing Kubectl</h4>
+<div class="outline-text-4" id="text-org46363b3">
 <div class="org-src-container">
 <pre class="src src-bash">choco info kubernetes-cli
 </pre>
@@ -2362,9 +2456,9 @@ Virtualbox machines. This can actually become quite large on disk.
 </div>
 </div>
 
-<div id="outline-container-orgbc6633f" class="outline-4">
-<h4 id="orgbc6633f">Configuring Kubectl</h4>
-<div class="outline-text-4" id="text-orgbc6633f">
+<div id="outline-container-org478850f" class="outline-4">
+<h4 id="org478850f">Configuring Kubectl</h4>
+<div class="outline-text-4" id="text-org478850f">
 <p>
 <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/</a>
 </p>
@@ -2419,9 +2513,9 @@ Windows syntax) in your <b>~/.bashrc</b> file
 </div>
 </div>
 
-<div id="outline-container-org608be2c" class="outline-4">
-<h4 id="org608be2c">Installing Minikube</h4>
-<div class="outline-text-4" id="text-org608be2c">
+<div id="outline-container-org441aba5" class="outline-4">
+<h4 id="org441aba5">Installing Minikube</h4>
+<div class="outline-text-4" id="text-org441aba5">
 <div class="org-src-container">
 <pre class="src src-bash">choco info minikube
 </pre>
@@ -2498,9 +2592,9 @@ Windows syntax) in your <b>~/.bashrc</b> file
 </div>
 </div>
 
-<div id="outline-container-org311ee41" class="outline-4">
-<h4 id="org311ee41">Configuring Minikube</h4>
-<div class="outline-text-4" id="text-org311ee41">
+<div id="outline-container-org1e22e2a" class="outline-4">
+<h4 id="org1e22e2a">Configuring Minikube</h4>
+<div class="outline-text-4" id="text-org1e22e2a">
 <div class="info">
 <p>
 If you followed the step to setup cygwin by adding/changing all tutorial related
@@ -2531,9 +2625,9 @@ Windows syntax) in your <b>~/.bashrc</b> file
 </div>
 </div>
 
-<div id="outline-container-org906ed3f" class="outline-4">
-<h4 id="org906ed3f">Installing Minishift</h4>
-<div class="outline-text-4" id="text-org906ed3f">
+<div id="outline-container-orgfacc6f1" class="outline-4">
+<h4 id="orgfacc6f1">Installing Minishift</h4>
+<div class="outline-text-4" id="text-orgfacc6f1">
 <div class="org-src-container">
 <pre class="src src-bash">choco info minishift
 </pre>
@@ -2603,9 +2697,9 @@ Windows syntax) in your <b>~/.bashrc</b> file
 </div>
 </div>
 
-<div id="outline-container-orgd92f046" class="outline-4">
-<h4 id="orgd92f046">Configuring Minishift</h4>
-<div class="outline-text-4" id="text-orgd92f046">
+<div id="outline-container-orgedd1330" class="outline-4">
+<h4 id="orgedd1330">Configuring Minishift</h4>
+<div class="outline-text-4" id="text-orgedd1330">
 <div class="info">
 <p>
 If you followed the step to setup cygwin by adding/changing all tutorial related
@@ -2665,9 +2759,9 @@ to avoid the following errors when running minishift related commands
 </div>
 </div>
 
-<div id="outline-container-org9943ae4" class="outline-4">
-<h4 id="org9943ae4">Upgrading choco installed packages</h4>
-<div class="outline-text-4" id="text-org9943ae4">
+<div id="outline-container-orgdd0d5f3" class="outline-4">
+<h4 id="orgdd0d5f3">Upgrading choco installed packages</h4>
+<div class="outline-text-4" id="text-orgdd0d5f3">
 <p>
 Whenever you need to update choco installed packages use
 </p>
@@ -2680,9 +2774,9 @@ Whenever you need to update choco installed packages use
 </div>
 </div>
 
-<div id="outline-container-orgac30f19" class="outline-3">
-<h3 id="orgac30f19"><span class="section-number-3">2.9</span> (Optional) Installing "virtualenv" with pip</h3>
-<div class="outline-text-3" id="text-2-9">
+<div id="outline-container-orgff82855" class="outline-3">
+<h3 id="orgff82855"><span class="section-number-3">3.9</span> (Optional) Installing "virtualenv" with pip</h3>
+<div class="outline-text-3" id="text-3-9">
 <p>
 <a href="https://virtualenv.pypa.io/en/stable/">https://virtualenv.pypa.io/en/stable/</a>
 </p>
@@ -2732,13 +2826,13 @@ Install <b>virtualenv</b> in your main Cygwin installation.
 </div>
 </div>
 
-<div id="outline-container-org5103bde" class="outline-3">
-<h3 id="org5103bde"><span class="section-number-3">2.10</span> Installing Ansible</h3>
-<div class="outline-text-3" id="text-2-10">
+<div id="outline-container-orgea0d963" class="outline-3">
+<h3 id="orgea0d963"><span class="section-number-3">3.10</span> Installing Ansible</h3>
+<div class="outline-text-3" id="text-3-10">
 </div>
-<div id="outline-container-org198150d" class="outline-4">
-<h4 id="org198150d">Installing Ansible in "virtualenv"</h4>
-<div class="outline-text-4" id="text-org198150d">
+<div id="outline-container-orgdf65095" class="outline-4">
+<h4 id="orgdf65095">Installing Ansible in "virtualenv"</h4>
+<div class="outline-text-4" id="text-orgdf65095">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/.venv &amp;&amp; <span style="color: #483d8b;">cd</span> /misc
 </pre>
@@ -2874,9 +2968,9 @@ To exit your virtualenv just type <code>deactivate</code>.
 </div>
 </div>
 
-<div id="outline-container-org8d6e12e" class="outline-4">
-<h4 id="org8d6e12e">Installing Ansible in the main cygwin distribution</h4>
-<div class="outline-text-4" id="text-org8d6e12e">
+<div id="outline-container-org6689c18" class="outline-4">
+<h4 id="org6689c18">Installing Ansible in the main cygwin distribution</h4>
+<div class="outline-text-4" id="text-org6689c18">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">type</span> pip2
 </pre>
@@ -2894,9 +2988,9 @@ To exit your virtualenv just type <code>deactivate</code>.
 </div>
 </div>
 
-<div id="outline-container-org11ceef1" class="outline-3">
-<h3 id="org11ceef1"><span class="section-number-3">2.11</span> Configuring Ansible</h3>
-<div class="outline-text-3" id="text-2-11">
+<div id="outline-container-org16270fa" class="outline-3">
+<h3 id="org16270fa"><span class="section-number-3">3.11</span> Configuring Ansible</h3>
+<div class="outline-text-3" id="text-3-11">
 <p>
 Changes can be made and used in a configuration file which will be processed in the following order:
 </p>
@@ -3438,9 +3532,9 @@ an entry which we'll be using later in the tutorial do not have default values.
 </div>
 </div>
 
-<div id="outline-container-org9c6bbd8" class="outline-3">
-<h3 id="org9c6bbd8"><span class="section-number-3">2.12</span> Create wrapper scripts around Ansible commands for use with Vagrant</h3>
-<div class="outline-text-3" id="text-2-12">
+<div id="outline-container-org17094f0" class="outline-3">
+<h3 id="org17094f0"><span class="section-number-3">3.12</span> Create wrapper scripts around Ansible commands for use with Vagrant</h3>
+<div class="outline-text-3" id="text-3-12">
 <p>
 Because we are using the cygwin version of <b>Ansible</b>, commands like
 <b>ansible-playbook</b>, which are used internally by the Windows version of <b>Vagrant</b>
@@ -3450,9 +3544,9 @@ files which basically call the underlying python script via the Cygwin bash shel
 </p>
 </div>
 
-<div id="outline-container-org4f7e545" class="outline-4">
-<h4 id="org4f7e545">If you installed ansible in virtualenv</h4>
-<div class="outline-text-4" id="text-org4f7e545">
+<div id="outline-container-org4b12610" class="outline-4">
+<h4 id="org4b12610">If you installed ansible in virtualenv</h4>
+<div class="outline-text-4" id="text-org4b12610">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; /misc/.venv/bin/cygwin-shim.bat &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">@echo off</span>
@@ -3495,9 +3589,9 @@ files which basically call the underlying python script via the Cygwin bash shel
 </div>
 </div>
 
-<div id="outline-container-org3c40c8b" class="outline-4">
-<h4 id="org3c40c8b">If you installed ansible in your main cygwin installation</h4>
-<div class="outline-text-4" id="text-org3c40c8b">
+<div id="outline-container-org9a3585c" class="outline-4">
+<h4 id="org9a3585c">If you installed ansible in your main cygwin installation</h4>
+<div class="outline-text-4" id="text-org9a3585c">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; /usr/local/bin/cygwin-shim.bat &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">@echo off</span>
@@ -3541,9 +3635,9 @@ files which basically call the underlying python script via the Cygwin bash shel
 </div>
 </div>
 
-<div id="outline-container-orgfd1e7dd" class="outline-3">
-<h3 id="orgfd1e7dd"><span class="section-number-3">2.13</span> Upgrading Ansible (Only when necessary)</h3>
-<div class="outline-text-3" id="text-2-13">
+<div id="outline-container-org641358b" class="outline-3">
+<h3 id="org641358b"><span class="section-number-3">3.13</span> Upgrading Ansible (Only when necessary)</h3>
+<div class="outline-text-3" id="text-3-13">
 <p>
 Whenever you want/need to update ansible, either create a <b>new</b> virtual
 environment or use the below appoach for the current virtual environment.
@@ -3617,9 +3711,9 @@ environment or use the below appoach for the current virtual environment.
 </div>
 
 
-<div id="outline-container-org56b730d" class="outline-2">
-<h2 id="org56b730d"><span class="section-number-2">3</span> Using Packer</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgab48646" class="outline-2">
+<h2 id="orgab48646"><span class="section-number-2">4</span> Using Packer</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 Packer is an open source tool for creating identical machine images for multiple
 platforms from a single source configuration. Packer is lightweight, runs on
@@ -3636,13 +3730,13 @@ machines.
 </p>
 </div>
 
-<div id="outline-container-orga2c8160" class="outline-3">
-<h3 id="orga2c8160"><span class="section-number-3">3.1</span> Creating base VMs</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-orgc7ce830" class="outline-3">
+<h3 id="orgc7ce830"><span class="section-number-3">4.1</span> Creating base VMs</h3>
+<div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-orgeffa43f" class="outline-4">
-<h4 id="orgeffa43f">Oracle Linux 7.5</h4>
-<div class="outline-text-4" id="text-orgeffa43f">
+<div id="outline-container-org9503de3" class="outline-4">
+<h4 id="org9503de3">Oracle Linux 7.5</h4>
+<div class="outline-text-4" id="text-org9503de3">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">export</span> <span style="color: #a0522d;">ol_ver</span>=7.5
 mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,http} &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}
@@ -3650,9 +3744,9 @@ mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,htt
 </div>
 </div>
 
-<div id="outline-container-orge38c05e" class="outline-5">
-<h5 id="orge38c05e">Download Oracle Linux DVD ISO image from Oracle</h5>
-<div class="outline-text-5" id="text-orge38c05e">
+<div id="outline-container-org0bb62b0" class="outline-5">
+<h5 id="org0bb62b0">Download Oracle Linux DVD ISO image from Oracle</h5>
+<div class="outline-text-5" id="text-org0bb62b0">
 <p>
 Go to <a href="https://edelivery.oracle.com">https://edelivery.oracle.com</a> and search for <b>Oracle Linux</b>. From the list
 presented click on <b>Oracle Linux 7.5.0.0.0</b> to put it in your cart. Click on
@@ -3666,9 +3760,9 @@ right clicking and <b>Save Link as..</b> and place it into the
 </div>
 </div>
 
-<div id="outline-container-org906b837" class="outline-5">
-<h5 id="org906b837">Kickstart file</h5>
-<div class="outline-text-5" id="text-org906b837">
+<div id="outline-container-orgde03234" class="outline-5">
+<h5 id="orgde03234">Kickstart file</h5>
+<div class="outline-text-5" id="text-orgde03234">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #a0522d;">hostname</span>=ol75-base <span style="color: #8b2252;">\</span>
 <span style="color: #a0522d;">domain</span>=vzell.de <span style="color: #8b2252;">\</span>
@@ -3779,9 +3873,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-orgfebe0a0" class="outline-5">
-<h5 id="orgfebe0a0">Packer JSON script</h5>
-<div class="outline-text-5" id="text-orgfebe0a0">
+<div id="outline-container-org15a3916" class="outline-5">
+<h5 id="org15a3916">Packer JSON script</h5>
+<div class="outline-text-5" id="text-org15a3916">
 <div class="org-src-container">
 <pre class="src src-bash">md5sum /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/iso/V975367-01.iso | awk <span style="color: #8b2252;">'{ print $1; }'</span>
 </pre>
@@ -3959,9 +4053,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-org87e06c4" class="outline-5">
-<h5 id="org87e06c4">Packer execution</h5>
-<div class="outline-text-5" id="text-org87e06c4">
+<div id="outline-container-orga647ce2" class="outline-5">
+<h5 id="orga647ce2">Packer execution</h5>
+<div class="outline-text-5" id="text-orga647ce2">
 <div class="org-src-container">
 <pre class="src src-bash">packer
 </pre>
@@ -5033,9 +5127,9 @@ When you execute the next command be prepared to react on the Windows Firewall p
 </div>
 </div>
 
-<div id="outline-container-orgfe096bf" class="outline-5">
-<h5 id="orgfe096bf">Resulting filesystem structure</h5>
-<div class="outline-text-5" id="text-orgfe096bf">
+<div id="outline-container-orga60e6a7" class="outline-5">
+<h5 id="orga60e6a7">Resulting filesystem structure</h5>
+<div class="outline-text-5" id="text-orga60e6a7">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/packer
 </pre>
@@ -5064,9 +5158,9 @@ When you execute the next command be prepared to react on the Windows Firewall p
 </div>
 </div>
 
-<div id="outline-container-org10d2d8e" class="outline-4">
-<h4 id="org10d2d8e">Oracle Linux 7.5 with one additional data disk (NOT needed for this tutorial)</h4>
-<div class="outline-text-4" id="text-org10d2d8e">
+<div id="outline-container-org0f533ec" class="outline-4">
+<h4 id="org0f533ec">Oracle Linux 7.5 with one additional data disk (NOT needed for this tutorial)</h4>
+<div class="outline-text-4" id="text-org0f533ec">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">export</span> <span style="color: #a0522d;">ol_ver</span>=7.5-1d
 mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,http} &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}
@@ -5074,9 +5168,9 @@ mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,htt
 </div>
 </div>
 
-<div id="outline-container-orgfe68798" class="outline-5">
-<h5 id="orgfe68798">Move Oracle Linux DVD ISO image into place</h5>
-<div class="outline-text-5" id="text-orgfe68798">
+<div id="outline-container-org8286d32" class="outline-5">
+<h5 id="org8286d32">Move Oracle Linux DVD ISO image into place</h5>
+<div class="outline-text-5" id="text-org8286d32">
 <div class="org-src-container">
 <pre class="src src-bash">mv -v /misc/packer/ol/7.5/iso/V975367-01.iso /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/iso/V975367-01.iso
 </pre>
@@ -5088,9 +5182,9 @@ mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,htt
 </div>
 </div>
 
-<div id="outline-container-org4d8de73" class="outline-5">
-<h5 id="org4d8de73">Kickstart file</h5>
-<div class="outline-text-5" id="text-org4d8de73">
+<div id="outline-container-org111f052" class="outline-5">
+<h5 id="org111f052">Kickstart file</h5>
+<div class="outline-text-5" id="text-org111f052">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #a0522d;">hostname</span>=ol75-base <span style="color: #8b2252;">\</span>
 <span style="color: #a0522d;">domain</span>=vzell.de <span style="color: #8b2252;">\</span>
@@ -5201,9 +5295,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-orgdea4c06" class="outline-5">
-<h5 id="orgdea4c06">Packer JSON script</h5>
-<div class="outline-text-5" id="text-orgdea4c06">
+<div id="outline-container-org091eb68" class="outline-5">
+<h5 id="org091eb68">Packer JSON script</h5>
+<div class="outline-text-5" id="text-org091eb68">
 <div class="org-src-container">
 <pre class="src src-bash">md5sum /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/iso/V975367-01.iso | awk <span style="color: #8b2252;">'{ print $1; }'</span>
 </pre>
@@ -5395,9 +5489,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-org7578f4a" class="outline-5">
-<h5 id="org7578f4a">Create additional disk(s) with VBoxManage</h5>
-<div class="outline-text-5" id="text-org7578f4a">
+<div id="outline-container-orgdca968c" class="outline-5">
+<h5 id="orgdca968c">Create additional disk(s) with VBoxManage</h5>
+<div class="outline-text-5" id="text-orgdca968c">
 <div class="org-src-container">
 <pre class="src src-bash">vbm createmedium --filename ./.virtualbox/data1.vdi --size 2048000 --format vdi --variant Standard
 </pre>
@@ -5429,9 +5523,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-orgabde0fb" class="outline-5">
-<h5 id="orgabde0fb">Packer execution</h5>
-<div class="outline-text-5" id="text-orgabde0fb">
+<div id="outline-container-org1686ac2" class="outline-5">
+<h5 id="org1686ac2">Packer execution</h5>
+<div class="outline-text-5" id="text-org1686ac2">
 <div class="org-src-container">
 <pre class="src src-bash">packer validate -var-file=iso/iso-info.json packer.json
 </pre>
@@ -6484,9 +6578,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-org571979f" class="outline-5">
-<h5 id="org571979f">Resulting filesystem structure</h5>
-<div class="outline-text-5" id="text-org571979f">
+<div id="outline-container-orgb6b6b1b" class="outline-5">
+<h5 id="orgb6b6b1b">Resulting filesystem structure</h5>
+<div class="outline-text-5" id="text-orgb6b6b1b">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/packer
 </pre>
@@ -6534,9 +6628,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-orgfcc012b" class="outline-4">
-<h4 id="orgfcc012b">Oracle Linux 6.10 (NOT needed for this tutorial)</h4>
-<div class="outline-text-4" id="text-orgfcc012b">
+<div id="outline-container-org83dc4a9" class="outline-4">
+<h4 id="org83dc4a9">Oracle Linux 6.10 (NOT needed for this tutorial)</h4>
+<div class="outline-text-4" id="text-org83dc4a9">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">export</span> <span style="color: #a0522d;">ol_ver</span>=6.10
 mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,http} &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}
@@ -6544,18 +6638,18 @@ mkdir -p /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/{iso,htt
 </div>
 </div>
 
-<div id="outline-container-orgf11536f" class="outline-5">
-<h5 id="orgf11536f">Download Oracle Linux DVD ISO image from Oracle</h5>
-<div class="outline-text-5" id="text-orgf11536f">
+<div id="outline-container-org90b7004" class="outline-5">
+<h5 id="org90b7004">Download Oracle Linux DVD ISO image from Oracle</h5>
+<div class="outline-text-5" id="text-org90b7004">
 <p>
 Donwload from <a href="https://edelivery.oracle.com">https://edelivery.oracle.com</a> the Oracle Linux DVD and place <b>V978757-01.iso</b> into the <code>/misc/packer/ol/6.10/iso</code> folder.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org8b9c984" class="outline-5">
-<h5 id="org8b9c984">Kickstart file</h5>
-<div class="outline-text-5" id="text-org8b9c984">
+<div id="outline-container-orgda9ac97" class="outline-5">
+<h5 id="orgda9ac97">Kickstart file</h5>
+<div class="outline-text-5" id="text-orgda9ac97">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #a0522d;">hostname</span>=ol610-base <span style="color: #8b2252;">\</span>
 <span style="color: #a0522d;">domain</span>=vzell.de <span style="color: #8b2252;">\</span>
@@ -6682,9 +6776,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-orgddee066" class="outline-5">
-<h5 id="orgddee066">Packer JSON script</h5>
-<div class="outline-text-5" id="text-orgddee066">
+<div id="outline-container-orgf79f268" class="outline-5">
+<h5 id="orgf79f268">Packer JSON script</h5>
+<div class="outline-text-5" id="text-orgf79f268">
 <div class="org-src-container">
 <pre class="src src-bash">md5sum /misc/packer/ol/${<span style="color: #a0522d;">ol_ver</span>}/iso/V978757-01.iso | awk <span style="color: #8b2252;">'{ print $1; }'</span>
 </pre>
@@ -6859,9 +6953,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-org64d16b5" class="outline-5">
-<h5 id="org64d16b5">Packer execution</h5>
-<div class="outline-text-5" id="text-org64d16b5">
+<div id="outline-container-orgd8d19d3" class="outline-5">
+<h5 id="orgd8d19d3">Packer execution</h5>
+<div class="outline-text-5" id="text-orgd8d19d3">
 <div class="org-src-container">
 <pre class="src src-bash">packer validate -var-file=iso/iso-info.json packer.json
 </pre>
@@ -6977,9 +7071,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 </div>
 
-<div id="outline-container-orgc18c3f5" class="outline-5">
-<h5 id="orgc18c3f5">Resulting filesystem structure</h5>
-<div class="outline-text-5" id="text-orgc18c3f5">
+<div id="outline-container-orgf3dbd71" class="outline-5">
+<h5 id="orgf3dbd71">Resulting filesystem structure</h5>
+<div class="outline-text-5" id="text-orgf3dbd71">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/packer
 </pre>
@@ -7043,9 +7137,9 @@ cat &gt; http/ks.cfg &lt;&lt;-_EOF
 </div>
 
 
-<div id="outline-container-org9fb2c03" class="outline-2">
-<h2 id="org9fb2c03"><span class="section-number-2">4</span> Using Ansible-Galaxy</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org5051c45" class="outline-2">
+<h2 id="org5051c45"><span class="section-number-2">5</span> Using Ansible-Galaxy</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 Ansible Galaxy (<a href="https://galaxy.ansible.com/">https://galaxy.ansible.com/</a>) is Ansible’s official hub for sharing Ansible content.  It is a
 free site for finding, downloading, and sharing community developed
@@ -7060,9 +7154,9 @@ to create a new role, remove roles, or perform tasks on the Galaxy website.
 </p>
 </div>
 
-<div id="outline-container-org012637c" class="outline-3">
-<h3 id="org012637c"><span class="section-number-3">4.1</span> Create roles for provisioning an Oracle Linux 7.5 system with GNOME Desktop and Docker support</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-orgae89aec" class="outline-3">
+<h3 id="orgae89aec"><span class="section-number-3">5.1</span> Create roles for provisioning an Oracle Linux 7.5 system with GNOME Desktop and Docker support</h3>
+<div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/ansible/roles &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/ansible/roles
 </pre>
@@ -7242,9 +7336,9 @@ to create a new role, remove roles, or perform tasks on the Galaxy website.
 </div>
 
 
-<div id="outline-container-orgf5de373" class="outline-2">
-<h2 id="orgf5de373"><span class="section-number-2">5</span> Using Vagrant</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-org29f5499" class="outline-2">
+<h2 id="org29f5499"><span class="section-number-2">6</span> Using Vagrant</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 Vagrant is a tool for building and managing virtual machine environments in a
 single workflow. With an easy-to-use workflow and focus on automation, Vagrant
@@ -7267,13 +7361,13 @@ automatically install and configure software on the virtual machine.
 </p>
 </div>
 
-<div id="outline-container-org0eff6c2" class="outline-3">
-<h3 id="org0eff6c2"><span class="section-number-3">5.1</span> Calling Vagrant commands</h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-org3fc53d9" class="outline-3">
+<h3 id="org3fc53d9"><span class="section-number-3">6.1</span> Calling Vagrant commands</h3>
+<div class="outline-text-3" id="text-6-1">
 </div>
-<div id="outline-container-orgdc629eb" class="outline-4">
-<h4 id="orgdc629eb">vagrant</h4>
-<div class="outline-text-4" id="text-orgdc629eb">
+<div id="outline-container-org5610855" class="outline-4">
+<h4 id="org5610855">vagrant</h4>
+<div class="outline-text-4" id="text-org5610855">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant
 </pre>
@@ -7354,9 +7448,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org52a7dac" class="outline-4">
-<h4 id="org52a7dac">version</h4>
-<div class="outline-text-4" id="text-org52a7dac">
+<div id="outline-container-org1b21e4a" class="outline-4">
+<h4 id="org1b21e4a">version</h4>
+<div class="outline-text-4" id="text-org1b21e4a">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant version
 </pre>
@@ -7371,9 +7465,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org6f70a62" class="outline-4">
-<h4 id="org6f70a62">global-status</h4>
-<div class="outline-text-4" id="text-org6f70a62">
+<div id="outline-container-org5b1f169" class="outline-4">
+<h4 id="org5b1f169">global-status</h4>
+<div class="outline-text-4" id="text-org5b1f169">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant global-status -h
 </pre>
@@ -7402,13 +7496,13 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org17ab285" class="outline-3">
-<h3 id="org17ab285"><span class="section-number-3">5.2</span> Building Vagrant base box for Oracle Linux 7.5</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-org18c7a9f" class="outline-3">
+<h3 id="org18c7a9f"><span class="section-number-3">6.2</span> Building Vagrant base box for Oracle Linux 7.5</h3>
+<div class="outline-text-3" id="text-6-2">
 </div>
-<div id="outline-container-orga436228" class="outline-4">
-<h4 id="orga436228">Rename the packer generated OVF file to box.ovf</h4>
-<div class="outline-text-4" id="text-orga436228">
+<div id="outline-container-org111a2ef" class="outline-4">
+<h4 id="org111a2ef">Rename the packer generated OVF file to box.ovf</h4>
+<div class="outline-text-4" id="text-org111a2ef">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/packer/ol/7.5/output-ol75-base.vzell.de &amp;&amp; mv packer-ol75-base.ovf box.ovf
 </pre>
@@ -7416,9 +7510,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org0bd18fb" class="outline-4">
-<h4 id="org0bd18fb">Create Vagrantfile</h4>
-<div class="outline-text-4" id="text-org0bd18fb">
+<div id="outline-container-org9541cac" class="outline-4">
+<h4 id="org9541cac">Create Vagrantfile</h4>
+<div class="outline-text-4" id="text-org9541cac">
 <div class="org-src-container">
 <pre class="src src-bash">grep MACAddress box.ovf
 </pre>
@@ -7448,9 +7542,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgc906252" class="outline-4">
-<h4 id="orgc906252">Create Box Info File</h4>
-<div class="outline-text-4" id="text-orgc906252">
+<div id="outline-container-orga0de982" class="outline-4">
+<h4 id="orga0de982">Create Box Info File</h4>
+<div class="outline-text-4" id="text-orga0de982">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; info.json &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">{</span>
@@ -7465,9 +7559,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgdc484d0" class="outline-4">
-<h4 id="orgdc484d0">Create Box File for Provider</h4>
-<div class="outline-text-4" id="text-orgdc484d0">
+<div id="outline-container-orgc60d6b6" class="outline-4">
+<h4 id="orgc60d6b6">Create Box File for Provider</h4>
+<div class="outline-text-4" id="text-orgc60d6b6">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; metadata.json &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">{</span>
@@ -7479,9 +7573,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org7dc1fb4" class="outline-4">
-<h4 id="org7dc1fb4">Directory structure</h4>
-<div class="outline-text-4" id="text-org7dc1fb4">
+<div id="outline-container-org090c3f2" class="outline-4">
+<h4 id="org090c3f2">Directory structure</h4>
+<div class="outline-text-4" id="text-org090c3f2">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/packer
 </pre>
@@ -7515,9 +7609,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org86545d5" class="outline-4">
-<h4 id="org86545d5">Create Vagrant Box</h4>
-<div class="outline-text-4" id="text-org86545d5">
+<div id="outline-container-org3a96c54" class="outline-4">
+<h4 id="org3a96c54">Create Vagrant Box</h4>
+<div class="outline-text-4" id="text-org3a96c54">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/vagrant/boxes
 </pre>
@@ -7539,9 +7633,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgfd31b0a" class="outline-4">
-<h4 id="orgfd31b0a">Create Box Metadata File</h4>
-<div class="outline-text-4" id="text-orgfd31b0a">
+<div id="outline-container-org93ba006" class="outline-4">
+<h4 id="org93ba006">Create Box Metadata File</h4>
+<div class="outline-text-4" id="text-org93ba006">
 <div class="org-src-container">
 <pre class="src src-bash">sha1sum /misc/vagrant/boxes/packer-ol75-0.9.0.box | awk <span style="color: #8b2252;">'{ print $1; }'</span>
 </pre>
@@ -7576,9 +7670,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgf4d8662" class="outline-4">
-<h4 id="orgf4d8662">Add the box to the vagrant registry</h4>
-<div class="outline-text-4" id="text-orgf4d8662">
+<div id="outline-container-orgf5fd565" class="outline-4">
+<h4 id="orgf5fd565">Add the box to the vagrant registry</h4>
+<div class="outline-text-4" id="text-orgf5fd565">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/vagrant
 </pre>
@@ -7663,9 +7757,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orge076331" class="outline-4">
-<h4 id="orge076331">Directory structure</h4>
-<div class="outline-text-4" id="text-orge076331">
+<div id="outline-container-orgeed99dc" class="outline-4">
+<h4 id="orgeed99dc">Directory structure</h4>
+<div class="outline-text-4" id="text-orgeed99dc">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/vagrant
 </pre>
@@ -7706,9 +7800,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org6159022" class="outline-4">
-<h4 id="org6159022">Checking the vagrant registry</h4>
-<div class="outline-text-4" id="text-org6159022">
+<div id="outline-container-org414caba" class="outline-4">
+<h4 id="org414caba">Checking the vagrant registry</h4>
+<div class="outline-text-4" id="text-org414caba">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant box list
 </pre>
@@ -7734,13 +7828,13 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orge86922b" class="outline-3">
-<h3 id="orge86922b"><span class="section-number-3">5.3</span> Building Vagrant base box for Oracle Linux 6.10</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-org6aa1823" class="outline-3">
+<h3 id="org6aa1823"><span class="section-number-3">6.3</span> Building Vagrant base box for Oracle Linux 6.10</h3>
+<div class="outline-text-3" id="text-6-3">
 </div>
-<div id="outline-container-orge2b29d0" class="outline-4">
-<h4 id="orge2b29d0">Rename the packer generated OVF file to box.ovf</h4>
-<div class="outline-text-4" id="text-orge2b29d0">
+<div id="outline-container-orga299e40" class="outline-4">
+<h4 id="orga299e40">Rename the packer generated OVF file to box.ovf</h4>
+<div class="outline-text-4" id="text-orga299e40">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/packer/ol/6.10/output-ol610-base.vzell.de &amp;&amp; mv packer-ol610-base.ovf box.ovf
 </pre>
@@ -7748,9 +7842,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org1f911fc" class="outline-4">
-<h4 id="org1f911fc">Vagrantfile</h4>
-<div class="outline-text-4" id="text-org1f911fc">
+<div id="outline-container-orgdb5b955" class="outline-4">
+<h4 id="orgdb5b955">Vagrantfile</h4>
+<div class="outline-text-4" id="text-orgdb5b955">
 <div class="org-src-container">
 <pre class="src src-bash">grep MACAddress box.ovf
 </pre>
@@ -7780,9 +7874,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org6aa9d06" class="outline-4">
-<h4 id="org6aa9d06">Create Box Info File</h4>
-<div class="outline-text-4" id="text-org6aa9d06">
+<div id="outline-container-org47d44ab" class="outline-4">
+<h4 id="org47d44ab">Create Box Info File</h4>
+<div class="outline-text-4" id="text-org47d44ab">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; info.json &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">{</span>
@@ -7797,9 +7891,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org2cbb97f" class="outline-4">
-<h4 id="org2cbb97f">Create Box File for Provider</h4>
-<div class="outline-text-4" id="text-org2cbb97f">
+<div id="outline-container-org82d1c31" class="outline-4">
+<h4 id="org82d1c31">Create Box File for Provider</h4>
+<div class="outline-text-4" id="text-org82d1c31">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; metadata.json &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">{</span>
@@ -7811,9 +7905,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org7d1419a" class="outline-4">
-<h4 id="org7d1419a">Create Vagrant Box</h4>
-<div class="outline-text-4" id="text-org7d1419a">
+<div id="outline-container-org0750579" class="outline-4">
+<h4 id="org0750579">Create Vagrant Box</h4>
+<div class="outline-text-4" id="text-org0750579">
 <div class="org-src-container">
 <pre class="src src-bash">tar --exclude=<span style="color: #8b2252;">'*.vdi'</span> -cvzf /misc/vagrant/boxes/packer-ol610-0.9.0.box *
 </pre>
@@ -7830,9 +7924,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orga98608f" class="outline-4">
-<h4 id="orga98608f">Create Box Metadata File</h4>
-<div class="outline-text-4" id="text-orga98608f">
+<div id="outline-container-org469d7b8" class="outline-4">
+<h4 id="org469d7b8">Create Box Metadata File</h4>
+<div class="outline-text-4" id="text-org469d7b8">
 <div class="org-src-container">
 <pre class="src src-bash">sha1sum /misc/vagrant/boxes/packer-ol610-0.9.0.box | awk <span style="color: #8b2252;">'{ print $1; }'</span>
 </pre>
@@ -7867,9 +7961,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgb70d633" class="outline-4">
-<h4 id="orgb70d633">Add the box to the vagrant registry</h4>
-<div class="outline-text-4" id="text-orgb70d633">
+<div id="outline-container-org3992721" class="outline-4">
+<h4 id="org3992721">Add the box to the vagrant registry</h4>
+<div class="outline-text-4" id="text-org3992721">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/vagrant
 </pre>
@@ -7901,9 +7995,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgf803f35" class="outline-4">
-<h4 id="orgf803f35">Directory structure</h4>
-<div class="outline-text-4" id="text-orgf803f35">
+<div id="outline-container-orge86e743" class="outline-4">
+<h4 id="orge86e743">Directory structure</h4>
+<div class="outline-text-4" id="text-orge86e743">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/vagrant
 </pre>
@@ -7958,9 +8052,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-orgfdaef80" class="outline-4">
-<h4 id="orgfdaef80">Checking the vagrant registry</h4>
-<div class="outline-text-4" id="text-orgfdaef80">
+<div id="outline-container-org054ba65" class="outline-4">
+<h4 id="org054ba65">Checking the vagrant registry</h4>
+<div class="outline-text-4" id="text-org054ba65">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant box list
 </pre>
@@ -7992,9 +8086,9 @@ points to, in our case  <code>/misc/vagrant/.vagrant.d</code>. The directory VAG
 </div>
 </div>
 
-<div id="outline-container-org2a4904d" class="outline-3">
-<h3 id="org2a4904d"><span class="section-number-3">5.4</span> Load Order and Merging of Vagrantfile files</h3>
-<div class="outline-text-3" id="text-5-4">
+<div id="outline-container-org030cb78" class="outline-3">
+<h3 id="org030cb78"><span class="section-number-3">6.4</span> Load Order and Merging of Vagrantfile files</h3>
+<div class="outline-text-3" id="text-6-4">
 <p>
 An important concept to understand is how Vagrant loads Vagrantfiles. Vagrant
 actually loads a series of Vagrantfiles, merging the settings as it goes. This
@@ -8023,9 +8117,9 @@ different, it will be noted in the relevant documentation section.
 </div>
 </div>
 
-<div id="outline-container-orgebe1824" class="outline-3">
-<h3 id="orgebe1824"><span class="section-number-3">5.5</span> Installing vbguest plugin</h3>
-<div class="outline-text-3" id="text-5-5">
+<div id="outline-container-org193a9cd" class="outline-3">
+<h3 id="org193a9cd"><span class="section-number-3">6.5</span> Installing vbguest plugin</h3>
+<div class="outline-text-3" id="text-6-5">
 <p>
 To avoid spurious errors like the following when doing a <code>vagrant up</code> the first
 time 
@@ -8148,9 +8242,9 @@ and Merging of Vagrantfile files</b> above.
 </div>
 </div>
 
-<div id="outline-container-org4919992" class="outline-3">
-<h3 id="org4919992"><span class="section-number-3">5.6</span> Building a Multinode Setup with Vagrant and Ansible based on a <b>yaml</b> input file</h3>
-<div class="outline-text-3" id="text-5-6">
+<div id="outline-container-orga4102e2" class="outline-3">
+<h3 id="orga4102e2"><span class="section-number-3">6.6</span> Building a Multinode Setup with Vagrant and Ansible based on a <b>yaml</b> input file</h3>
+<div class="outline-text-3" id="text-6-6">
 <p>
 The goal here is to setup by default 4 nodes. 
 </p>
@@ -8164,9 +8258,9 @@ will also be used by Oracle Fusion Middleware (FMW) products (like SOA, OSB, OAM
 </ul>
 </div>
 
-<div id="outline-container-org1cca590" class="outline-4">
-<h4 id="org1cca590">Create the staging area which will be used during provisioning</h4>
-<div class="outline-text-4" id="text-org1cca590">
+<div id="outline-container-org7cbc896" class="outline-4">
+<h4 id="org7cbc896">Create the staging area which will be used during provisioning</h4>
+<div class="outline-text-4" id="text-org7cbc896">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/vagrant/stage
 </pre>
@@ -8174,9 +8268,9 @@ will also be used by Oracle Fusion Middleware (FMW) products (like SOA, OSB, OAM
 </div>
 </div>
 
-<div id="outline-container-org544822e" class="outline-4">
-<h4 id="org544822e">Clone the vagrant-multihost repository from Opitz Bitbucket</h4>
-<div class="outline-text-4" id="text-org544822e">
+<div id="outline-container-org543faad" class="outline-4">
+<h4 id="org543faad">Clone the vagrant-multihost repository from Opitz Bitbucket</h4>
+<div class="outline-text-4" id="text-org543faad">
 <p>
 Clone the vagrant-multihost repository from Opitz Bitbucket.
 </p>
@@ -8204,9 +8298,9 @@ Use your standard Opitz account for logging in when prompted, eg. as username yo
 </div>
 </div>
 
-<div id="outline-container-org474062b" class="outline-4">
-<h4 id="org474062b">Directory Structure</h4>
-<div class="outline-text-4" id="text-org474062b">
+<div id="outline-container-org1febd66" class="outline-4">
+<h4 id="org1febd66">Directory Structure</h4>
+<div class="outline-text-4" id="text-org1febd66">
 <div class="org-src-container">
 <pre class="src src-bash">tree -a /misc/vagrant/vagrant-multihost
 </pre>
@@ -8271,9 +8365,9 @@ Use your standard Opitz account for logging in when prompted, eg. as username yo
 </div>
 </div>
 
-<div id="outline-container-org8348317" class="outline-4">
-<h4 id="org8348317">Create, start and provision the multinode setup</h4>
-<div class="outline-text-4" id="text-org8348317">
+<div id="outline-container-orge8f9062" class="outline-4">
+<h4 id="orge8f9062">Create, start and provision the multinode setup</h4>
+<div class="outline-text-4" id="text-orge8f9062">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant up -h
 </pre>
@@ -8893,9 +8987,9 @@ Log in as user <code>vagrant</code>, password <code>vagrant</code> and enjoy&#x2
 </div>
 </div>
 
-<div id="outline-container-orgc24d44d" class="outline-4">
-<h4 id="orgc24d44d">Halting the multinode setup</h4>
-<div class="outline-text-4" id="text-orgc24d44d">
+<div id="outline-container-orgf6e6c66" class="outline-4">
+<h4 id="orgf6e6c66">Halting the multinode setup</h4>
+<div class="outline-text-4" id="text-orgf6e6c66">
 <div class="warning">
 <p>
 Don't do this now when you want to proceed with the tutorial.
@@ -8917,9 +9011,9 @@ Don't do this now when you want to proceed with the tutorial.
 </div>
 </div>
 
-<div id="outline-container-org8040e44" class="outline-4">
-<h4 id="org8040e44">Destroying the multinode setup</h4>
-<div class="outline-text-4" id="text-org8040e44">
+<div id="outline-container-org19454bf" class="outline-4">
+<h4 id="org19454bf">Destroying the multinode setup</h4>
+<div class="outline-text-4" id="text-org19454bf">
 <div class="warning">
 <p>
 Don't do this now when you want to proceed with the tutorial.
@@ -8942,15 +9036,15 @@ Don't do this now when you want to proceed with the tutorial.
 </div>
 </div>
 
-<div id="outline-container-org16d6cc9" class="outline-3">
-<h3 id="org16d6cc9"><span class="section-number-3">5.7</span> If you're interested more in Docker than Ansible, you can go directly to the Docker chapter</h3>
+<div id="outline-container-org26f0fce" class="outline-3">
+<h3 id="org26f0fce"><span class="section-number-3">6.7</span> If you're interested more in Docker than Ansible, you can go directly to the Docker chapter</h3>
 </div>
 </div>
 
 
-<div id="outline-container-orgc4a46e0" class="outline-2">
-<h2 id="orgc4a46e0"><span class="section-number-2">6</span> Using Ansible</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-orgdb0bb9b" class="outline-2">
+<h2 id="orgdb0bb9b"><span class="section-number-2">7</span> Using Ansible</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 Ansible is an IT automation tool. It can configure systems, deploy software, and
 orchestrate more advanced IT tasks such as continuous deployments or zero
@@ -8958,9 +9052,9 @@ downtime rolling updates.
 </p>
 </div>
 
-<div id="outline-container-org8297df0" class="outline-3">
-<h3 id="org8297df0"><span class="section-number-3">6.1</span> Download Software from Oracle to be provisioned by Ansible</h3>
-<div class="outline-text-3" id="text-6-1">
+<div id="outline-container-orgc5dcabc" class="outline-3">
+<h3 id="orgc5dcabc"><span class="section-number-3">7.1</span> Download Software from Oracle to be provisioned by Ansible</h3>
+<div class="outline-text-3" id="text-7-1">
 <p>
 From the Oracle Software Delivery Cloud <a href="https://edelivery.oracle.com">https://edelivery.oracle.com</a> download the following software
 </p>
@@ -9048,9 +9142,9 @@ The resulting directory structure should like like
 </div>
 </div>
 
-<div id="outline-container-org4542b8c" class="outline-3">
-<h3 id="org4542b8c"><span class="section-number-3">6.2</span> Clone the ansible-oracle-fmw Repository from Opitz Bitbucket</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-orgb383166" class="outline-3">
+<h3 id="orgb383166"><span class="section-number-3">7.2</span> Clone the ansible-oracle-fmw Repository from Opitz Bitbucket</h3>
+<div class="outline-text-3" id="text-7-2">
 <p>
 Clone the ansible-oracle-fmw Repository from Opitz Bitbucket
 </p>
@@ -9079,9 +9173,9 @@ Use your standard Opitz account for logging in when prompted, eg. as username yo
 </div>
 </div>
 
-<div id="outline-container-org2eeece9" class="outline-3">
-<h3 id="org2eeece9"><span class="section-number-3">6.3</span> Ansible Connection Tests</h3>
-<div class="outline-text-3" id="text-6-3">
+<div id="outline-container-org3366c1e" class="outline-3">
+<h3 id="org3366c1e"><span class="section-number-3">7.3</span> Ansible Connection Tests</h3>
+<div class="outline-text-3" id="text-7-3">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/ansible/ansible-oracle-fmw
 </pre>
@@ -9152,9 +9246,9 @@ Use your standard Opitz account for logging in when prompted, eg. as username yo
 </div>
 </div>
 
-<div id="outline-container-org706b74a" class="outline-3">
-<h3 id="org706b74a"><span class="section-number-3">6.4</span> Oracle Database and Grid Install with Ansible</h3>
-<div class="outline-text-3" id="text-6-4">
+<div id="outline-container-orgfafaf3e" class="outline-3">
+<h3 id="orgfafaf3e"><span class="section-number-3">7.4</span> Oracle Database and Grid Install with Ansible</h3>
+<div class="outline-text-3" id="text-7-4">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/ansible/ansible-oracle-fmw
 </pre>
@@ -9448,9 +9542,9 @@ FIXME Because of the SELinx configuration change, we have to reboot. This should
 </div>
 </div>
 
-<div id="outline-container-orgdd72e20" class="outline-3">
-<h3 id="orgdd72e20"><span class="section-number-3">6.5</span> Oracle Fusion Middleware SOA-BPM install with Ansible</h3>
-<div class="outline-text-3" id="text-6-5">
+<div id="outline-container-org13d6336" class="outline-3">
+<h3 id="org13d6336"><span class="section-number-3">7.5</span> Oracle Fusion Middleware SOA-BPM install with Ansible</h3>
+<div class="outline-text-3" id="text-7-5">
 <p>
 Here we will create a SOA-BPM Domain with the following topology
 </p>
@@ -9464,9 +9558,9 @@ Here we will create a SOA-BPM Domain with the following topology
 </pre>
 </div>
 
-<div id="outline-container-org8ed1777" class="outline-4">
-<h4 id="org8ed1777">Setup AdminServer of the SOA-BPM-Domain</h4>
-<div class="outline-text-4" id="text-org8ed1777">
+<div id="outline-container-orgf3a25b6" class="outline-4">
+<h4 id="orgf3a25b6">Setup AdminServer of the SOA-BPM-Domain</h4>
+<div class="outline-text-4" id="text-orgf3a25b6">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/ansible/ansible-oracle-fmw
 </pre>
@@ -10059,9 +10153,9 @@ You can check out the topology of the generated SOA BPM domain.
 </div>
 </div>
 
-<div id="outline-container-org1e86f8a" class="outline-4">
-<h4 id="org1e86f8a">Setup ManagedServers of the SOA-BPM-Domain</h4>
-<div class="outline-text-4" id="text-org1e86f8a">
+<div id="outline-container-org5871a88" class="outline-4">
+<h4 id="org5871a88">Setup ManagedServers of the SOA-BPM-Domain</h4>
+<div class="outline-text-4" id="text-org5871a88">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/ansible/ansible-oracle-fmw
 </pre>
@@ -10438,9 +10532,9 @@ on the two fmwnode's.
 </div>
 
 
-<div id="outline-container-orge6c2175" class="outline-2">
-<h2 id="orge6c2175"><span class="section-number-2">7</span> Using Docker</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-org34eddd0" class="outline-2">
+<h2 id="org34eddd0"><span class="section-number-2">8</span> Using Docker</h2>
+<div class="outline-text-2" id="text-8">
 <p>
 Docker is a computer program that performs operating-system-level
 virtualization, also known as "containerization"
@@ -10457,9 +10551,9 @@ modifying standard images downloaded from public repositories.
 </p>
 </div>
 
-<div id="outline-container-orgdc21372" class="outline-3">
-<h3 id="orgdc21372"><span class="section-number-3">7.1</span> Create a docker account</h3>
-<div class="outline-text-3" id="text-7-1">
+<div id="outline-container-org2b1ce4e" class="outline-3">
+<h3 id="org2b1ce4e"><span class="section-number-3">8.1</span> Create a docker account</h3>
+<div class="outline-text-3" id="text-8-1">
 <div class="org-src-container">
 <pre class="src src-bash">cygstart https://cloud.docker.com/
 </pre>
@@ -10472,13 +10566,13 @@ modifying standard images downloaded from public repositories.
 </div>
 </div>
 
-<div id="outline-container-org1d8ed3b" class="outline-3">
-<h3 id="org1d8ed3b"><span class="section-number-3">7.2</span> Configure and test Docker installation inside the Linux guest in VirtualBox</h3>
-<div class="outline-text-3" id="text-7-2">
+<div id="outline-container-orga1bcbca" class="outline-3">
+<h3 id="orga1bcbca"><span class="section-number-3">8.2</span> Configure and test Docker installation inside the Linux guest in VirtualBox</h3>
+<div class="outline-text-3" id="text-8-2">
 </div>
-<div id="outline-container-org8ff0b7c" class="outline-4">
-<h4 id="org8ff0b7c">Configuration</h4>
-<div class="outline-text-4" id="text-org8ff0b7c">
+<div id="outline-container-org2a0def1" class="outline-4">
+<h4 id="org2a0def1">Configuration</h4>
+<div class="outline-text-4" id="text-org2a0def1">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant ssh ol75-master
 </pre>
@@ -10555,9 +10649,9 @@ To confirm that userid is part of docker group run below command and make sure i
 </div>
 </div>
 
-<div id="outline-container-orgb97c339" class="outline-4">
-<h4 id="orgb97c339">Test</h4>
-<div class="outline-text-4" id="text-orgb97c339">
+<div id="outline-container-org2764487" class="outline-4">
+<h4 id="org2764487">Test</h4>
+<div class="outline-text-4" id="text-org2764487">
 <div class="org-src-container">
 <pre class="src src-bash">docker run hello-world
 </pre>
@@ -10626,9 +10720,9 @@ To confirm that userid is part of docker group run below command and make sure i
 </div>
 </div>
 
-<div id="outline-container-orgb90b1cb" class="outline-4">
-<h4 id="orgb90b1cb">Cleanup</h4>
-<div class="outline-text-4" id="text-orgb90b1cb">
+<div id="outline-container-org685bb1f" class="outline-4">
+<h4 id="org685bb1f">Cleanup</h4>
+<div class="outline-text-4" id="text-org685bb1f">
 <div class="org-src-container">
 <pre class="src src-bash">docker rm $(<span style="color: #ff00ff;">docker</span> ps -a -q)
 </pre>
@@ -10654,17 +10748,17 @@ To confirm that userid is part of docker group run below command and make sure i
 </div>
 </div>
 
-<div id="outline-container-org654bf48" class="outline-3">
-<h3 id="org654bf48"><span class="section-number-3">7.3</span> Get Started with Docker on Linux guest in VirtualBox</h3>
-<div class="outline-text-3" id="text-7-3">
+<div id="outline-container-org8dff308" class="outline-3">
+<h3 id="org8dff308"><span class="section-number-3">8.3</span> Get Started with Docker on Linux guest in VirtualBox</h3>
+<div class="outline-text-3" id="text-8-3">
 </div>
-<div id="outline-container-orgddf2b0a" class="outline-4">
-<h4 id="orgddf2b0a">Containers</h4>
-<div class="outline-text-4" id="text-orgddf2b0a">
+<div id="outline-container-orgcbcaf6d" class="outline-4">
+<h4 id="orgcbcaf6d">Containers</h4>
+<div class="outline-text-4" id="text-orgcbcaf6d">
 </div>
-<div id="outline-container-orge8d7805" class="outline-5">
-<h5 id="orge8d7805">Define a container with Dockerfile</h5>
-<div class="outline-text-5" id="text-orge8d7805">
+<div id="outline-container-org1bab70b" class="outline-5">
+<h5 id="org1bab70b">Define a container with Dockerfile</h5>
+<div class="outline-text-5" id="text-org1bab70b">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p ~/docker/part2 &amp;&amp; <span style="color: #483d8b;">cd</span> ~/docker/part2
 </pre>
@@ -10698,9 +10792,9 @@ To confirm that userid is part of docker group run below command and make sure i
 </div>
 </div>
 
-<div id="outline-container-orgbe49451" class="outline-5">
-<h5 id="orgbe49451">The <b>app</b> itself</h5>
-<div class="outline-text-5" id="text-orgbe49451">
+<div id="outline-container-org367dc04" class="outline-5">
+<h5 id="org367dc04">The <b>app</b> itself</h5>
+<div class="outline-text-5" id="text-org367dc04">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; requirements.txt &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">Flask</span>
@@ -10753,9 +10847,9 @@ To confirm that userid is part of docker group run below command and make sure i
 </div>
 </div>
 
-<div id="outline-container-orgd728734" class="outline-5">
-<h5 id="orgd728734">Build the app</h5>
-<div class="outline-text-5" id="text-orgd728734">
+<div id="outline-container-org0e9739c" class="outline-5">
+<h5 id="org0e9739c">Build the app</h5>
+<div class="outline-text-5" id="text-org0e9739c">
 <div class="org-src-container">
 <pre class="src src-bash">docker build -t friendlyhello .
 </pre>
@@ -10832,9 +10926,9 @@ To confirm that userid is part of docker group run below command and make sure i
 </div>
 </div>
 
-<div id="outline-container-orgc33b21b" class="outline-5">
-<h5 id="orgc33b21b">Run and test the app</h5>
-<div class="outline-text-5" id="text-orgc33b21b">
+<div id="outline-container-orgf2f7299" class="outline-5">
+<h5 id="orgf2f7299">Run and test the app</h5>
+<div class="outline-text-5" id="text-orgf2f7299">
 <div class="org-src-container">
 <pre class="src src-bash">docker run -p 4000:80 friendlyhello
 </pre>
@@ -10934,13 +11028,13 @@ Run the app in detached mode.
 </div>
 </div>
 
-<div id="outline-container-org77c6a03" class="outline-5">
-<h5 id="org77c6a03">Share your image</h5>
-<div class="outline-text-5" id="text-org77c6a03">
+<div id="outline-container-orge38e676" class="outline-5">
+<h5 id="orge38e676">Share your image</h5>
+<div class="outline-text-5" id="text-orge38e676">
 </div>
 <ul class="org-ul">
-<li><a id="org85689dc"></a>Create a docker account<br />
-<div class="outline-text-6" id="text-org85689dc">
+<li><a id="org2c977a3"></a>Create a docker account<br />
+<div class="outline-text-6" id="text-org2c977a3">
 <div class="org-src-container">
 <pre class="src src-bash">cygstart https://hub.docker.com/
 </pre>
@@ -10948,8 +11042,8 @@ Run the app in detached mode.
 </div>
 </li>
 
-<li><a id="orgbb7cc92"></a>Log in with your Docker ID<br />
-<div class="outline-text-6" id="text-orgbb7cc92">
+<li><a id="orgfc0995f"></a>Log in with your Docker ID<br />
+<div class="outline-text-6" id="text-orgfc0995f">
 <div class="org-src-container">
 <pre class="src src-bash">docker login
 </pre>
@@ -10973,8 +11067,8 @@ Enter your docker username
 </div>
 </li>
 
-<li><a id="org992f7f7"></a>Tag the image<br />
-<div class="outline-text-6" id="text-org992f7f7">
+<li><a id="orga7e52e9"></a>Tag the image<br />
+<div class="outline-text-6" id="text-orga7e52e9">
 <div class="org-src-container">
 <pre class="src src-bash">docker tag friendlyhello vzell/get-started:part2
 </pre>
@@ -10994,8 +11088,8 @@ Enter your docker username
 </div>
 </li>
 
-<li><a id="org83b4baf"></a>Publish the image<br />
-<div class="outline-text-6" id="text-org83b4baf">
+<li><a id="org518712e"></a>Publish the image<br />
+<div class="outline-text-6" id="text-org518712e">
 <div class="org-src-container">
 <pre class="src src-bash">docker push vzell/get-started:part2
 </pre>
@@ -11015,8 +11109,8 @@ Enter your docker username
 </div>
 </li>
 
-<li><a id="org199b5ec"></a>Pull and run the image from the remote repository<br />
-<div class="outline-text-6" id="text-org199b5ec">
+<li><a id="org25eda30"></a>Pull and run the image from the remote repository<br />
+<div class="outline-text-6" id="text-org25eda30">
 <p>
 Let's first delete the current image
 </p>
@@ -11105,13 +11199,13 @@ Press CTRL+C to quit
 </div>
 </div>
 
-<div id="outline-container-orgcedc3d3" class="outline-4">
-<h4 id="orgcedc3d3">Cleanup</h4>
-<div class="outline-text-4" id="text-orgcedc3d3">
+<div id="outline-container-org2187733" class="outline-4">
+<h4 id="org2187733">Cleanup</h4>
+<div class="outline-text-4" id="text-org2187733">
 </div>
-<div id="outline-container-orgcdf1471" class="outline-5">
-<h5 id="orgcdf1471">Kill all running containers</h5>
-<div class="outline-text-5" id="text-orgcdf1471">
+<div id="outline-container-org3dde00c" class="outline-5">
+<h5 id="org3dde00c">Kill all running containers</h5>
+<div class="outline-text-5" id="text-org3dde00c">
 <div class="org-src-container">
 <pre class="src src-bash">docker ps -q
 </pre>
@@ -11124,9 +11218,9 @@ Press CTRL+C to quit
 </div>
 </div>
 
-<div id="outline-container-org69d0536" class="outline-5">
-<h5 id="org69d0536">Delete all stopped containers</h5>
-<div class="outline-text-5" id="text-org69d0536">
+<div id="outline-container-org5627a25" class="outline-5">
+<h5 id="org5627a25">Delete all stopped containers</h5>
+<div class="outline-text-5" id="text-org5627a25">
 <div class="org-src-container">
 <pre class="src src-bash">docker ps -a -q
 </pre>
@@ -11151,9 +11245,9 @@ Press CTRL+C to quit
 </div>
 </div>
 
-<div id="outline-container-org1c6f736" class="outline-5">
-<h5 id="org1c6f736">Delete all images</h5>
-<div class="outline-text-5" id="text-org1c6f736">
+<div id="outline-container-org5704c56" class="outline-5">
+<h5 id="org5704c56">Delete all images</h5>
+<div class="outline-text-5" id="text-org5704c56">
 <div class="org-src-container">
 <pre class="src src-bash">docker images -q
 </pre>
@@ -11188,9 +11282,9 @@ Press CTRL+C to quit
 </div>
 </div>
 
-<div id="outline-container-orge3e9451" class="outline-4">
-<h4 id="orge3e9451">Exit from your Linux guest</h4>
-<div class="outline-text-4" id="text-orge3e9451">
+<div id="outline-container-orga51e90a" class="outline-4">
+<h4 id="orga51e90a">Exit from your Linux guest</h4>
+<div class="outline-text-4" id="text-orga51e90a">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #a020f0;">exit</span>
 </pre>
@@ -11199,17 +11293,17 @@ Press CTRL+C to quit
 </div>
 </div>
 
-<div id="outline-container-org7c81bd1" class="outline-3">
-<h3 id="org7c81bd1"><span class="section-number-3">7.4</span> Get Started with Docker on Cygwin under Windows</h3>
-<div class="outline-text-3" id="text-7-4">
+<div id="outline-container-orgbde8a2d" class="outline-3">
+<h3 id="orgbde8a2d"><span class="section-number-3">8.4</span> Get Started with Docker on Cygwin under Windows</h3>
+<div class="outline-text-3" id="text-8-4">
 <p>
 From now on we will work again under <b>Cygwin</b> from our <b>Windows host</b> system.
 </p>
 </div>
 
-<div id="outline-container-org82adf61" class="outline-4">
-<h4 id="org82adf61">Create two machines (on Windows)</h4>
-<div class="outline-text-4" id="text-org82adf61">
+<div id="outline-container-org2bd24a8" class="outline-4">
+<h4 id="org2bd24a8">Create two machines (on Windows)</h4>
+<div class="outline-text-4" id="text-org2bd24a8">
 <div class="org-src-container">
 <pre class="src src-bash">docker-machine --version
 </pre>
@@ -11349,9 +11443,9 @@ Windows might ask for the permission to configure a dhcp server. Sometimes, such
 </div>
 </div>
 
-<div id="outline-container-org8a0cb89" class="outline-4">
-<h4 id="org8a0cb89">Docker machine shell environment on Cygwin</h4>
-<div class="outline-text-4" id="text-org8a0cb89">
+<div id="outline-container-org39ab16e" class="outline-4">
+<h4 id="org39ab16e">Docker machine shell environment on Cygwin</h4>
+<div class="outline-text-4" id="text-org39ab16e">
 <div class="org-src-container">
 <pre class="src src-bash">docker-machine env myvm1
 </pre>
@@ -11397,13 +11491,13 @@ Windows might ask for the permission to configure a dhcp server. Sometimes, such
 </div>
 </div>
 
-<div id="outline-container-orgab145df" class="outline-4">
-<h4 id="orgab145df">Containers</h4>
-<div class="outline-text-4" id="text-orgab145df">
+<div id="outline-container-orgd37c5e0" class="outline-4">
+<h4 id="orgd37c5e0">Containers</h4>
+<div class="outline-text-4" id="text-orgd37c5e0">
 </div>
-<div id="outline-container-org4e94411" class="outline-5">
-<h5 id="org4e94411">Define a container with Dockerfile</h5>
-<div class="outline-text-5" id="text-org4e94411">
+<div id="outline-container-org65eede6" class="outline-5">
+<h5 id="org65eede6">Define a container with Dockerfile</h5>
+<div class="outline-text-5" id="text-org65eede6">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/docker/docker/part2 &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/docker/docker/part2
 </pre>
@@ -11437,9 +11531,9 @@ Windows might ask for the permission to configure a dhcp server. Sometimes, such
 </div>
 </div>
 
-<div id="outline-container-org13d76cf" class="outline-5">
-<h5 id="org13d76cf">The <b>app</b> itself</h5>
-<div class="outline-text-5" id="text-org13d76cf">
+<div id="outline-container-orga6f8ae3" class="outline-5">
+<h5 id="orga6f8ae3">The <b>app</b> itself</h5>
+<div class="outline-text-5" id="text-orga6f8ae3">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; requirements.txt &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">Flask</span>
@@ -11492,9 +11586,9 @@ Windows might ask for the permission to configure a dhcp server. Sometimes, such
 </div>
 </div>
 
-<div id="outline-container-orgf249a0d" class="outline-5">
-<h5 id="orgf249a0d">Build the app</h5>
-<div class="outline-text-5" id="text-orgf249a0d">
+<div id="outline-container-org0743557" class="outline-5">
+<h5 id="org0743557">Build the app</h5>
+<div class="outline-text-5" id="text-org0743557">
 <div class="org-src-container">
 <pre class="src src-bash">docker build -t friendlyhello .
 </pre>
@@ -11589,9 +11683,9 @@ SECURITY WARNING: You are building a Docker image from Windows against a non-Win
 </div>
 </div>
 
-<div id="outline-container-orge8b9e72" class="outline-5">
-<h5 id="orge8b9e72">Run the app on the first machine</h5>
-<div class="outline-text-5" id="text-orge8b9e72">
+<div id="outline-container-org42d4af1" class="outline-5">
+<h5 id="org42d4af1">Run the app on the first machine</h5>
+<div class="outline-text-5" id="text-org42d4af1">
 <div class="org-src-container">
 <pre class="src src-bash">docker run -p 4000:80 friendlyhello
 </pre>
@@ -11697,9 +11791,9 @@ Test from your Windows host. Use the IP address that docker-machine reports via 
 </div>
 </div>
 
-<div id="outline-container-orgbf53a90" class="outline-5">
-<h5 id="orgbf53a90">Pull and run the image from the remote repository on the second machine</h5>
-<div class="outline-text-5" id="text-orgbf53a90">
+<div id="outline-container-org168a034" class="outline-5">
+<h5 id="org168a034">Pull and run the image from the remote repository on the second machine</h5>
+<div class="outline-text-5" id="text-org168a034">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">eval</span> $(<span style="color: #ff00ff;">docker-machine</span> env myvm2)
 </pre>
@@ -11886,13 +11980,13 @@ Test from your Windows host. Use the IP address that docker-machine reports via 
 </div>
 </div>
 
-<div id="outline-container-org80d0beb" class="outline-4">
-<h4 id="org80d0beb">Services</h4>
-<div class="outline-text-4" id="text-org80d0beb">
+<div id="outline-container-org920d505" class="outline-4">
+<h4 id="org920d505">Services</h4>
+<div class="outline-text-4" id="text-org920d505">
 </div>
-<div id="outline-container-org8e7ea5d" class="outline-5">
-<h5 id="org8e7ea5d">Your first docker-compose.yml file</h5>
-<div class="outline-text-5" id="text-org8e7ea5d">
+<div id="outline-container-orgef6add4" class="outline-5">
+<h5 id="orgef6add4">Your first docker-compose.yml file</h5>
+<div class="outline-text-5" id="text-orgef6add4">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/docker/docker/part3 &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/docker/docker/part3
 </pre>
@@ -11925,9 +12019,9 @@ Test from your Windows host. Use the IP address that docker-machine reports via 
 </div>
 </div>
 
-<div id="outline-container-org4c4ba96" class="outline-5">
-<h5 id="org4c4ba96">Run your new load-balanced app</h5>
-<div class="outline-text-5" id="text-org4c4ba96">
+<div id="outline-container-org75770d4" class="outline-5">
+<h5 id="org75770d4">Run your new load-balanced app</h5>
+<div class="outline-text-5" id="text-org75770d4">
 <div class="org-src-container">
 <pre class="src src-bash">docker swarm init
 </pre>
@@ -12026,9 +12120,9 @@ container IDs match your output from the previous command (docker container ls -
 </div>
 </div>
 
-<div id="outline-container-orgd32df9d" class="outline-5">
-<h5 id="orgd32df9d">Scale the app</h5>
-<div class="outline-text-5" id="text-orgd32df9d">
+<div id="outline-container-org2290b7e" class="outline-5">
+<h5 id="org2290b7e">Scale the app</h5>
+<div class="outline-text-5" id="text-org2290b7e">
 <p>
 You can scale the app by changing the replicas value in docker-compose.yml
 </p>
@@ -12084,9 +12178,9 @@ You can scale the app by changing the replicas value in docker-compose.yml
 </div>
 </div>
 
-<div id="outline-container-org5686801" class="outline-5">
-<h5 id="org5686801">Take down the app and the swarm</h5>
-<div class="outline-text-5" id="text-org5686801">
+<div id="outline-container-org33828bc" class="outline-5">
+<h5 id="org33828bc">Take down the app and the swarm</h5>
+<div class="outline-text-5" id="text-org33828bc">
 <div class="org-src-container">
 <pre class="src src-bash">docker stack rm getstartedlab
 </pre>
@@ -12109,25 +12203,25 @@ You can scale the app by changing the replicas value in docker-compose.yml
 </div>
 </div>
 
-<div id="outline-container-orgb4ad7b9" class="outline-4">
-<h4 id="orgb4ad7b9">Swarms</h4>
-<div class="outline-text-4" id="text-orgb4ad7b9">
+<div id="outline-container-org413dc55" class="outline-4">
+<h4 id="org413dc55">Swarms</h4>
+<div class="outline-text-4" id="text-org413dc55">
 </div>
-<div id="outline-container-orgb7e247b" class="outline-5">
-<h5 id="orgb7e247b">Set up your swarm</h5>
-<div class="outline-text-5" id="text-orgb7e247b">
+<div id="outline-container-orgf903731" class="outline-5">
+<h5 id="orgf903731">Set up your swarm</h5>
+<div class="outline-text-5" id="text-orgf903731">
 </div>
 <ul class="org-ul">
-<li><a id="org46bd606"></a>Create a cluster (on Windows)<br />
-<div class="outline-text-6" id="text-org46bd606">
+<li><a id="org90aa795"></a>Create a cluster (on Windows)<br />
+<div class="outline-text-6" id="text-org90aa795">
 <p>
 Already done, we have created already 2 machines.
 </p>
 </div>
 </li>
 
-<li><a id="orgd46b846"></a>List the VMs and get their IP addresses<br />
-<div class="outline-text-6" id="text-orgd46b846">
+<li><a id="org32b3816"></a>List the VMs and get their IP addresses<br />
+<div class="outline-text-6" id="text-org32b3816">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">eval</span> $(<span style="color: #ff00ff;">docker-machine</span> env myvm1)
 </pre>
@@ -12194,13 +12288,13 @@ Already done, we have created already 2 machines.
 </ul>
 </div>
 
-<div id="outline-container-orge55985a" class="outline-5">
-<h5 id="orge55985a">Deploy your app on the swarm cluster</h5>
-<div class="outline-text-5" id="text-orge55985a">
+<div id="outline-container-org7a9f1fc" class="outline-5">
+<h5 id="org7a9f1fc">Deploy your app on the swarm cluster</h5>
+<div class="outline-text-5" id="text-org7a9f1fc">
 </div>
 <ul class="org-ul">
-<li><a id="org4d06b8a"></a>Deploy the app on the swarm manager<br />
-<div class="outline-text-6" id="text-org4d06b8a">
+<li><a id="org3037b78"></a>Deploy the app on the swarm manager<br />
+<div class="outline-text-6" id="text-org3037b78">
 <div class="org-src-container">
 <pre class="src src-bash">docker stack deploy -c docker-compose.yml getstartedlab
 </pre>
@@ -12241,8 +12335,8 @@ docker stack deploy --with-registry-auth -c docker-compose.yml getstartedlab
 </div>
 </li>
 
-<li><a id="org7e275ab"></a>Accessing your cluster<br />
-<div class="outline-text-6" id="text-org7e275ab">
+<li><a id="orgb7260a8"></a>Accessing your cluster<br />
+<div class="outline-text-6" id="text-orgb7260a8">
 <div class="org-src-container">
 <pre class="src src-bash">docker-machine ls
 </pre>
@@ -12276,8 +12370,8 @@ docker stack deploy --with-registry-auth -c docker-compose.yml getstartedlab
 </div>
 </li>
 
-<li><a id="orgdff150c"></a>Iterating and scaling your app<br />
-<div class="outline-text-6" id="text-orgdff150c">
+<li><a id="org5de45c3"></a>Iterating and scaling your app<br />
+<div class="outline-text-6" id="text-org5de45c3">
 <p>
 You can scale the app by changing the replicas value in docker-compose.yml
 </p>
@@ -12330,10 +12424,10 @@ You can scale the app by changing the replicas value in docker-compose.yml
 </div>
 </li>
 
-<li><a id="org4477391"></a>Cleanup and reboot<br />
+<li><a id="org1907bc0"></a>Cleanup and reboot<br />
 <ul class="org-ul">
-<li><a id="org5fbd9fb"></a>Stacks and swarms<br />
-<div class="outline-text-7" id="text-org5fbd9fb">
+<li><a id="orgfbf6b5a"></a>Stacks and swarms<br />
+<div class="outline-text-7" id="text-orgfbf6b5a">
 <div class="org-src-container">
 <pre class="src src-bash">docker stack rm getstartedlab
 </pre>
@@ -12376,8 +12470,8 @@ docker swarm leave --force
 </div>
 </li>
 
-<li><a id="org6aeafa2"></a>Unsetting docker-machine shell variable settings<br />
-<div class="outline-text-7" id="text-org6aeafa2">
+<li><a id="org7f8b711"></a>Unsetting docker-machine shell variable settings<br />
+<div class="outline-text-7" id="text-org7f8b711">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">eval</span> $(<span style="color: #ff00ff;">docker-machine</span> env -u)
 </pre>
@@ -12390,8 +12484,8 @@ docker swarm leave --force
 </div>
 </li>
 
-<li><a id="orgd0616df"></a>Restarting Docker machines<br />
-<div class="outline-text-7" id="text-orgd0616df">
+<li><a id="org536568e"></a>Restarting Docker machines<br />
+<div class="outline-text-7" id="text-org536568e">
 <div class="org-src-container">
 <pre class="src src-bash">docker-machine ls
 </pre>
@@ -12462,13 +12556,13 @@ docker swarm leave --force
 </div>
 </div>
 
-<div id="outline-container-org560cae4" class="outline-4">
-<h4 id="org560cae4">Stacks</h4>
-<div class="outline-text-4" id="text-org560cae4">
+<div id="outline-container-org43a8cf8" class="outline-4">
+<h4 id="org43a8cf8">Stacks</h4>
+<div class="outline-text-4" id="text-org43a8cf8">
 </div>
-<div id="outline-container-org102c652" class="outline-5">
-<h5 id="org102c652">Prerequisites</h5>
-<div class="outline-text-5" id="text-org102c652">
+<div id="outline-container-org3212f47" class="outline-5">
+<h5 id="org3212f47">Prerequisites</h5>
+<div class="outline-text-5" id="text-org3212f47">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">eval</span> $(<span style="color: #ff00ff;">docker-machine</span> env myvm2)
 docker swarm leave
@@ -12578,9 +12672,9 @@ docker node ls
 </div>
 </div>
 
-<div id="outline-container-orgba4a236" class="outline-5">
-<h5 id="orgba4a236">Add a new service and redeploy</h5>
-<div class="outline-text-5" id="text-orgba4a236">
+<div id="outline-container-orgc899cbd" class="outline-5">
+<h5 id="orgc899cbd">Add a new service and redeploy</h5>
+<div class="outline-text-5" id="text-orgc899cbd">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/docker/docker/part4 &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/docker/docker/part4
 </pre>
@@ -12655,9 +12749,9 @@ docker node ls
 </div>
 </div>
 
-<div id="outline-container-org3f75137" class="outline-5">
-<h5 id="org3f75137">Persist the data</h5>
-<div class="outline-text-5" id="text-org3f75137">
+<div id="outline-container-org68dd956" class="outline-5">
+<h5 id="org68dd956">Persist the data</h5>
+<div class="outline-text-5" id="text-org68dd956">
 <div class="org-src-container">
 <pre class="src src-bash">cat &gt; docker-compose.yml &lt;&lt;-<span style="color: #8b2252;">"_EOF"</span>
 <span style="color: #ffa54f;">version: "3"</span>
@@ -12742,13 +12836,13 @@ docker node ls
 </div>
 </div>
 
-<div id="outline-container-orge69ebb4" class="outline-4">
-<h4 id="orge69ebb4">Deploy your app on a cloud provider</h4>
+<div id="outline-container-org5d813ec" class="outline-4">
+<h4 id="org5d813ec">Deploy your app on a cloud provider</h4>
 </div>
 
-<div id="outline-container-orgc217e05" class="outline-4">
-<h4 id="orgc217e05">Cleanup</h4>
-<div class="outline-text-4" id="text-orgc217e05">
+<div id="outline-container-org510ce89" class="outline-4">
+<h4 id="org510ce89">Cleanup</h4>
+<div class="outline-text-4" id="text-org510ce89">
 <div class="org-src-container">
 <pre class="src src-bash">docker-machine ls -q
 </pre>
@@ -12790,9 +12884,9 @@ docker swarm leave --force
 </div>
 </div>
 
-<div id="outline-container-orgfee0d58" class="outline-4">
-<h4 id="orgfee0d58">Recap</h4>
-<div class="outline-text-4" id="text-orgfee0d58">
+<div id="outline-container-org3546e69" class="outline-4">
+<h4 id="org3546e69">Recap</h4>
+<div class="outline-text-4" id="text-org3546e69">
 <div class="org-src-container">
 <pre class="src src-bash">docker-machine create --driver virtualbox myvm1 <span style="color: #b22222;"># </span><span style="color: #b22222;">Create a VM (Mac, Win7, Linux)</span>
 docker-machine create -d hyperv --hyperv-virtual-switch <span style="color: #8b2252;">"myswitch"</span> myvm1 <span style="color: #b22222;"># </span><span style="color: #b22222;">Win10</span>
@@ -12823,9 +12917,9 @@ docker-machine rm $(<span style="color: #ff00ff;">docker-machine</span> ls -q) <
 
 
 
-<div id="outline-container-org7cc2895" class="outline-3">
-<h3 id="org7cc2895"><span class="section-number-3">7.5</span> First steps with provisioning of Docker containers using Vagrant as provider</h3>
-<div class="outline-text-3" id="text-7-5">
+<div id="outline-container-org02bccd7" class="outline-3">
+<h3 id="org02bccd7"><span class="section-number-3">8.5</span> First steps with provisioning of Docker containers using Vagrant as provider</h3>
+<div class="outline-text-3" id="text-8-5">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/docker/vagrant &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/docker/vagrant
 </pre>
@@ -13316,9 +13410,9 @@ Bringing machine 'my-little-container' up with 'docker' provider...
 </div>
 </div>
 
-<div id="outline-container-org533923b" class="outline-3">
-<h3 id="org533923b"><span class="section-number-3">7.6</span> Java 9 - running Docker container in VirtualBox VM on Windows 10 courtesy of Vagrant</h3>
-<div class="outline-text-3" id="text-7-6">
+<div id="outline-container-org65f0211" class="outline-3">
+<h3 id="org65f0211"><span class="section-number-3">8.6</span> Java 9 - running Docker container in VirtualBox VM on Windows 10 courtesy of Vagrant</h3>
+<div class="outline-text-3" id="text-8-6">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/docker/java9 &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/docker/java9
 </pre>
@@ -13521,13 +13615,13 @@ Bringing machine 'dockerhostvm' up with 'virtualbox' provider...
 </div>
 </div>
 
-<div id="outline-container-org86ca187" class="outline-3">
-<h3 id="org86ca187"><span class="section-number-3">7.7</span> Vagrant Provisioning with Docker - Provisioning Virtual Systems with Docker</h3>
-<div class="outline-text-3" id="text-7-7">
+<div id="outline-container-org87ced9a" class="outline-3">
+<h3 id="org87ced9a"><span class="section-number-3">8.7</span> Vagrant Provisioning with Docker - Provisioning Virtual Systems with Docker</h3>
+<div class="outline-text-3" id="text-8-7">
 </div>
-<div id="outline-container-orga5bef27" class="outline-4">
-<h4 id="orga5bef27">Building Docker Image</h4>
-<div class="outline-text-4" id="text-orga5bef27">
+<div id="outline-container-org57f86a4" class="outline-4">
+<h4 id="org57f86a4">Building Docker Image</h4>
+<div class="outline-text-4" id="text-org57f86a4">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">export</span> <span style="color: #a0522d;">WORKAREA</span>=/misc/vagrant/vagrant-docker
 <span style="color: #a0522d;">WORKAREA</span>=${<span style="color: #a0522d;">WORKAREA</span>:-<span style="color: #8b2252;">"${HOME}/vagrant-docker"</span>}
@@ -14128,9 +14222,9 @@ cat &lt;&lt;-<span style="color: #8b2252;">'HTML'</span> &gt; ${<span style="col
 </div>
 </div>
 
-<div id="outline-container-org74d15ce" class="outline-4">
-<h4 id="org74d15ce">Using Existing Image</h4>
-<div class="outline-text-4" id="text-org74d15ce">
+<div id="outline-container-org1aedb9e" class="outline-4">
+<h4 id="org1aedb9e">Using Existing Image</h4>
+<div class="outline-text-4" id="text-org1aedb9e">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">export</span> <span style="color: #a0522d;">WORKAREA</span>=/misc/vagrant/vagrant-docker
 <span style="color: #a0522d;">WORKAREA</span>=${<span style="color: #a0522d;">WORKAREA</span>:-<span style="color: #8b2252;">"${HOME}/vagrant-docker"</span>}
@@ -14325,9 +14419,9 @@ Ubuntu and more so with RHEL, tend to fall behind the current versions.
 </div>
 
 
-<div id="outline-container-orga0166a1" class="outline-2">
-<h2 id="orga0166a1"><span class="section-number-2">8</span> Using Kubernetes</h2>
-<div class="outline-text-2" id="text-8">
+<div id="outline-container-orgc5bc5da" class="outline-2">
+<h2 id="orgc5bc5da"><span class="section-number-2">9</span> Using Kubernetes</h2>
+<div class="outline-text-2" id="text-9">
 <p>
 Kubernetes (commonly stylized as K8s) is an open-source container-orchestration
 system for automating deployment, scaling and management of containerized
@@ -14339,13 +14433,13 @@ Docker
 </p>
 </div>
 
-<div id="outline-container-org7592ea8" class="outline-3">
-<h3 id="org7592ea8"><span class="section-number-3">8.1</span> Creating Singlenode Kubernetes Cluster with Minikube running in VirtualBox on Windows</h3>
-<div class="outline-text-3" id="text-8-1">
+<div id="outline-container-orgc309acc" class="outline-3">
+<h3 id="orgc309acc"><span class="section-number-3">9.1</span> Creating Singlenode Kubernetes Cluster with Minikube running in VirtualBox on Windows</h3>
+<div class="outline-text-3" id="text-9-1">
 </div>
-<div id="outline-container-org7e86881" class="outline-4">
-<h4 id="org7e86881">Help</h4>
-<div class="outline-text-4" id="text-org7e86881">
+<div id="outline-container-org1079203" class="outline-4">
+<h4 id="org1079203">Help</h4>
+<div class="outline-text-4" id="text-org1079203">
 <div class="org-src-container">
 <pre class="src src-bash">minikube --help
 </pre>
@@ -14398,9 +14492,9 @@ Docker
 </div>
 </div>
 
-<div id="outline-container-org798bd22" class="outline-4">
-<h4 id="org798bd22">Starting the cluster</h4>
-<div class="outline-text-4" id="text-org798bd22">
+<div id="outline-container-org25d23eb" class="outline-4">
+<h4 id="org25d23eb">Starting the cluster</h4>
+<div class="outline-text-4" id="text-org25d23eb">
 <div class="org-src-container">
 <pre class="src src-bash">minikube start --help
 </pre>
@@ -14519,9 +14613,9 @@ Docker
 </div>
 </div>
 
-<div id="outline-container-org89b2b1d" class="outline-4">
-<h4 id="org89b2b1d">Kubernetes Client and Server version</h4>
-<div class="outline-text-4" id="text-org89b2b1d">
+<div id="outline-container-org66c3002" class="outline-4">
+<h4 id="org66c3002">Kubernetes Client and Server version</h4>
+<div class="outline-text-4" id="text-org66c3002">
 <div class="org-src-container">
 <pre class="src src-bash">kubectl version
 </pre>
@@ -14539,9 +14633,9 @@ Docker
 </div>
 </div>
 
-<div id="outline-container-org6c39fe8" class="outline-4">
-<h4 id="org6c39fe8">Cluster IP address</h4>
-<div class="outline-text-4" id="text-org6c39fe8">
+<div id="outline-container-orgbd5cc0c" class="outline-4">
+<h4 id="orgbd5cc0c">Cluster IP address</h4>
+<div class="outline-text-4" id="text-orgbd5cc0c">
 <div class="org-src-container">
 <pre class="src src-bash">minikube ip
 </pre>
@@ -14553,9 +14647,9 @@ Docker
 </div>
 </div>
 
-<div id="outline-container-org6b13e7a" class="outline-4">
-<h4 id="org6b13e7a">Kubernetes Dashboard</h4>
-<div class="outline-text-4" id="text-org6b13e7a">
+<div id="outline-container-org91258dc" class="outline-4">
+<h4 id="org91258dc">Kubernetes Dashboard</h4>
+<div class="outline-text-4" id="text-org91258dc">
 <p>
 In order to avoid the following error
 </p>
@@ -14605,9 +14699,9 @@ http://127.0.0.1:61011/api/v1/namespaces/kube-system/services/http:kubernetes-da
 </div>
 </div>
 
-<div id="outline-container-orgec720a0" class="outline-4">
-<h4 id="orgec720a0">Running a workloads</h4>
-<div class="outline-text-4" id="text-orgec720a0">
+<div id="outline-container-orgaa20a8f" class="outline-4">
+<h4 id="orgaa20a8f">Running a workloads</h4>
+<div class="outline-text-4" id="text-orgaa20a8f">
 <div class="org-src-container">
 <pre class="src src-bash">kubectl run hello-nginx --image=nginx --port=80
 </pre>
@@ -14690,9 +14784,9 @@ http://127.0.0.1:61011/api/v1/namespaces/kube-system/services/http:kubernetes-da
 </div>
 </div>
 
-<div id="outline-container-org6c331f9" class="outline-4">
-<h4 id="org6c331f9">Expose a service</h4>
-<div class="outline-text-4" id="text-org6c331f9">
+<div id="outline-container-org577120c" class="outline-4">
+<h4 id="org577120c">Expose a service</h4>
+<div class="outline-text-4" id="text-org577120c">
 <div class="org-src-container">
 <pre class="src src-bash">kubectl expose deployment hello-nginx --type=NodePort
 </pre>
@@ -14749,9 +14843,9 @@ http://127.0.0.1:61011/api/v1/namespaces/kube-system/services/http:kubernetes-da
 </div>
 </div>
 
-<div id="outline-container-org277653e" class="outline-4">
-<h4 id="org277653e">Scaling the service</h4>
-<div class="outline-text-4" id="text-org277653e">
+<div id="outline-container-org3378533" class="outline-4">
+<h4 id="org3378533">Scaling the service</h4>
+<div class="outline-text-4" id="text-org3378533">
 <div class="org-src-container">
 <pre class="src src-bash">kubectl scale --replicas=3 deployment/hello-nginx
 </pre>
@@ -14773,9 +14867,9 @@ http://127.0.0.1:61011/api/v1/namespaces/kube-system/services/http:kubernetes-da
 </div>
 </div>
 
-<div id="outline-container-org1490d78" class="outline-4">
-<h4 id="org1490d78">Stopping the Cluster</h4>
-<div class="outline-text-4" id="text-org1490d78">
+<div id="outline-container-orgc966749" class="outline-4">
+<h4 id="orgc966749">Stopping the Cluster</h4>
+<div class="outline-text-4" id="text-orgc966749">
 <div class="org-src-container">
 <pre class="src src-bash">minikube stop 
 </pre>
@@ -14788,9 +14882,9 @@ http://127.0.0.1:61011/api/v1/namespaces/kube-system/services/http:kubernetes-da
 </div>
 </div>
 
-<div id="outline-container-orgee12159" class="outline-4">
-<h4 id="orgee12159">Deleting the Cluster</h4>
-<div class="outline-text-4" id="text-orgee12159">
+<div id="outline-container-orgfde4494" class="outline-4">
+<h4 id="orgfde4494">Deleting the Cluster</h4>
+<div class="outline-text-4" id="text-orgfde4494">
 <div class="org-src-container">
 <pre class="src src-bash">minikube delete
 </pre>
@@ -14805,22 +14899,22 @@ http://127.0.0.1:61011/api/v1/namespaces/kube-system/services/http:kubernetes-da
 </div>
 
 
-<div id="outline-container-org3cfabfe" class="outline-3">
-<h3 id="org3cfabfe"><span class="section-number-3">8.2</span> Creating Multinode Kubernetes Cluster with Oracle Linux 7 running in VirtualBox on Windows</h3>
-<div class="outline-text-3" id="text-8-2">
+<div id="outline-container-orgbe7e4c4" class="outline-3">
+<h3 id="orgbe7e4c4"><span class="section-number-3">9.2</span> Creating Multinode Kubernetes Cluster with Oracle Linux 7 running in VirtualBox on Windows</h3>
+<div class="outline-text-3" id="text-9-2">
 </div>
-<div id="outline-container-orge20b26c" class="outline-4">
-<h4 id="orge20b26c">Create an Oracle Account</h4>
-<div class="outline-text-4" id="text-orge20b26c">
+<div id="outline-container-org97f8564" class="outline-4">
+<h4 id="org97f8564">Create an Oracle Account</h4>
+<div class="outline-text-4" id="text-org97f8564">
 <p>
 <a href="https://profile.oracle.com/myprofile/account/create-account.jspx">https://profile.oracle.com/myprofile/account/create-account.jspx</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org5477ab8" class="outline-4">
-<h4 id="org5477ab8">Agree to and accept the Oracle Standard Terms and Restrictions</h4>
-<div class="outline-text-4" id="text-org5477ab8">
+<div id="outline-container-org2dd311e" class="outline-4">
+<h4 id="org2dd311e">Agree to and accept the Oracle Standard Terms and Restrictions</h4>
+<div class="outline-text-4" id="text-org2dd311e">
 <p>
 <a href="https://container-registry.oracle.com">https://container-registry.oracle.com</a>
 </p>
@@ -14849,9 +14943,9 @@ You last accepted the Oracle Standard Terms and Restrictions on October/21/2018 
 </div>
 </div>
 
-<div id="outline-container-org85441ba" class="outline-4">
-<h4 id="org85441ba">Clone the Oracle vagrant-boxes project</h4>
-<div class="outline-text-4" id="text-org85441ba">
+<div id="outline-container-orgc23553e" class="outline-4">
+<h4 id="orgc23553e">Clone the Oracle vagrant-boxes project</h4>
+<div class="outline-text-4" id="text-orgc23553e">
 <div class="org-src-container">
 <pre class="src src-bash">mkdir -p /misc/kubernetes &amp;&amp; <span style="color: #483d8b;">cd</span> /misc/kubernetes
 </pre>
@@ -14869,9 +14963,9 @@ You last accepted the Oracle Standard Terms and Restrictions on October/21/2018 
 </div>
 </div>
 
-<div id="outline-container-orgbf3dc93" class="outline-4">
-<h4 id="orgbf3dc93">Install Master</h4>
-<div class="outline-text-4" id="text-orgbf3dc93">
+<div id="outline-container-org38b56a8" class="outline-4">
+<h4 id="org38b56a8">Install Master</h4>
+<div class="outline-text-4" id="text-org38b56a8">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant up master
 </pre>
@@ -15304,9 +15398,9 @@ Enter your password
 </div>
 </div>
 
-<div id="outline-container-org6241217" class="outline-4">
-<h4 id="org6241217">Install Worker1</h4>
-<div class="outline-text-4" id="text-org6241217">
+<div id="outline-container-org6f2a6fb" class="outline-4">
+<h4 id="org6f2a6fb">Install Worker1</h4>
+<div class="outline-text-4" id="text-org6f2a6fb">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant up worker1
 </pre>
@@ -15748,9 +15842,9 @@ Enter your password
 </div>
 </div>
 
-<div id="outline-container-org624fbeb" class="outline-4">
-<h4 id="org624fbeb">Install Worker2</h4>
-<div class="outline-text-4" id="text-org624fbeb">
+<div id="outline-container-orgdc9ba4e" class="outline-4">
+<h4 id="orgdc9ba4e">Install Worker2</h4>
+<div class="outline-text-4" id="text-orgdc9ba4e">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant up worker2
 </pre>
@@ -16192,9 +16286,9 @@ Enter your password
 </div>
 </div>
 
-<div id="outline-container-org881f42d" class="outline-4">
-<h4 id="org881f42d">Check the Cluster from the Master node</h4>
-<div class="outline-text-4" id="text-org881f42d">
+<div id="outline-container-org8c10fd7" class="outline-4">
+<h4 id="org8c10fd7">Check the Cluster from the Master node</h4>
+<div class="outline-text-4" id="text-org8c10fd7">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant ssh master
 </pre>
@@ -16282,9 +16376,9 @@ Enter your password
 </div>
 </div>
 
-<div id="outline-container-org30744a6" class="outline-4">
-<h4 id="org30744a6">Check the Cluster from the Windows host</h4>
-<div class="outline-text-4" id="text-org30744a6">
+<div id="outline-container-org8caac65" class="outline-4">
+<h4 id="org8caac65">Check the Cluster from the Windows host</h4>
+<div class="outline-text-4" id="text-org8caac65">
 <div class="org-src-container">
 <pre class="src src-bash">kubectl version
 </pre>
@@ -16356,9 +16450,9 @@ Enter your password
 </div>
 </div>
 
-<div id="outline-container-orgab6bffc" class="outline-4">
-<h4 id="orgab6bffc">Halting the clusters</h4>
-<div class="outline-text-4" id="text-orgab6bffc">
+<div id="outline-container-org21e7ea2" class="outline-4">
+<h4 id="org21e7ea2">Halting the clusters</h4>
+<div class="outline-text-4" id="text-org21e7ea2">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant halt worker2
 </pre>
@@ -16376,9 +16470,9 @@ Enter your password
 </div>
 </div>
 
-<div id="outline-container-orgde4648a" class="outline-4">
-<h4 id="orgde4648a">Destroying the clusters</h4>
-<div class="outline-text-4" id="text-orgde4648a">
+<div id="outline-container-orge8baeb1" class="outline-4">
+<h4 id="orge8baeb1">Destroying the clusters</h4>
+<div class="outline-text-4" id="text-orge8baeb1">
 <div class="org-src-container">
 <pre class="src src-bash">vagrant destroy worker2 -f
 </pre>
@@ -16398,9 +16492,9 @@ Enter your password
 </div>
 
 
-<div id="outline-container-org17d97d5" class="outline-3">
-<h3 id="org17d97d5"><span class="section-number-3">8.3</span> Docs</h3>
-<div class="outline-text-3" id="text-8-3">
+<div id="outline-container-org48bbc65" class="outline-3">
+<h3 id="org48bbc65"><span class="section-number-3">9.3</span> Docs</h3>
+<div class="outline-text-3" id="text-9-3">
 <p>
 <a href="https://kubernetes.io/docs/setup/pick-right-solution/">https://kubernetes.io/docs/setup/pick-right-solution/</a>
 </p>
@@ -16409,13 +16503,13 @@ Enter your password
 </div>
 
 
-<div id="outline-container-orgd3ed921" class="outline-2">
-<h2 id="orgd3ed921"><span class="section-number-2">9</span> Using Openshift</h2>
-<div class="outline-text-2" id="text-9">
+<div id="outline-container-orgb39ca23" class="outline-2">
+<h2 id="orgb39ca23"><span class="section-number-2">10</span> Using Openshift</h2>
+<div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-orgacf6685" class="outline-3">
-<h3 id="orgacf6685"><span class="section-number-3">9.1</span> Using Minishift - An OpenShift Origin All-in-One VM</h3>
-<div class="outline-text-3" id="text-9-1">
+<div id="outline-container-orgaef8d0d" class="outline-3">
+<h3 id="orgaef8d0d"><span class="section-number-3">10.1</span> Using Minishift - An OpenShift Origin All-in-One VM</h3>
+<div class="outline-text-3" id="text-10-1">
 <div class="org-src-container">
 <pre class="src src-bash">minishift version
 </pre>
@@ -17337,8 +17431,6 @@ Output from the second start
 # 
 # The server is accessible via web console at:
 #     https://192.168.99.103:8443/console
-# 
-# 
 </pre>
 
 <div class="org-src-container">
@@ -17409,17 +17501,17 @@ developer
 </div>
 
 
-<div id="outline-container-org9fc889f" class="outline-2">
-<h2 id="org9fc889f"><span class="section-number-2">10</span> Using Git</h2>
-<div class="outline-text-2" id="text-10">
+<div id="outline-container-org42efd15" class="outline-2">
+<h2 id="org42efd15"><span class="section-number-2">11</span> Using Git</h2>
+<div class="outline-text-2" id="text-11">
 </div>
-<div id="outline-container-orgb519f7a" class="outline-3">
-<h3 id="orgb519f7a"><span class="section-number-3">10.1</span> Bitbucket (Opitz)</h3>
-<div class="outline-text-3" id="text-10-1">
+<div id="outline-container-orge80cfc5" class="outline-3">
+<h3 id="orge80cfc5"><span class="section-number-3">11.1</span> Bitbucket (Opitz)</h3>
+<div class="outline-text-3" id="text-11-1">
 </div>
-<div id="outline-container-org2736368" class="outline-4">
-<h4 id="org2736368">Create an account</h4>
-<div class="outline-text-4" id="text-org2736368">
+<div id="outline-container-org69b40ef" class="outline-4">
+<h4 id="org69b40ef">Create an account</h4>
+<div class="outline-text-4" id="text-org69b40ef">
 <p>
 Create a Jira ticket and ask for access to the Opitz Bitbucket server. When you
 have access use a URL of the form <code>https://git.opitz-consulting.de/users/&lt;userid&gt;</code>
@@ -17432,9 +17524,9 @@ to access Bitbucket.
 </div>
 </div>
 
-<div id="outline-container-org0671582" class="outline-4">
-<h4 id="org0671582">Generating a new SSH key</h4>
-<div class="outline-text-4" id="text-org0671582">
+<div id="outline-container-orgbc7a1a8" class="outline-4">
+<h4 id="orgbc7a1a8">Generating a new SSH key</h4>
+<div class="outline-text-4" id="text-orgbc7a1a8">
 <div class="warning">
 <p>
 Make sure you use your own e-Mail address in the next command.
@@ -17471,9 +17563,9 @@ Make sure you use your own e-Mail address in the next command.
 </div>
 </div>
 
-<div id="outline-container-org17acbca" class="outline-4">
-<h4 id="org17acbca">Adding your SSH key to the ssh-agent</h4>
-<div class="outline-text-4" id="text-org17acbca">
+<div id="outline-container-orge5bfebb" class="outline-4">
+<h4 id="orge5bfebb">Adding your SSH key to the ssh-agent</h4>
+<div class="outline-text-4" id="text-orge5bfebb">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">eval</span> $(<span style="color: #ff00ff;">ssh-agent</span> -s)
 </pre>
@@ -17495,13 +17587,13 @@ Make sure you use your own e-Mail address in the next command.
 </div>
 </div>
 
-<div id="outline-container-org568401c" class="outline-3">
-<h3 id="org568401c"><span class="section-number-3">10.2</span> Working with repositories</h3>
-<div class="outline-text-3" id="text-10-2">
+<div id="outline-container-org2638301" class="outline-3">
+<h3 id="org2638301"><span class="section-number-3">11.2</span> Working with repositories</h3>
+<div class="outline-text-3" id="text-11-2">
 </div>
-<div id="outline-container-orgd5c7b48" class="outline-4">
-<h4 id="orgd5c7b48">Create a repository</h4>
-<div class="outline-text-4" id="text-orgd5c7b48">
+<div id="outline-container-orge89964a" class="outline-4">
+<h4 id="orge89964a">Create a repository</h4>
+<div class="outline-text-4" id="text-orge89964a">
 <p>
 Use a URL of the form <code>https://git.opitz-consulting.de/users/&lt;userid&gt;/repos?create</code>
 </p>
@@ -17516,9 +17608,9 @@ vagrant-multihost
 </div>
 </div>
 
-<div id="outline-container-org798a444" class="outline-4">
-<h4 id="org798a444">My code is ready to be pushed</h4>
-<div class="outline-text-4" id="text-org798a444">
+<div id="outline-container-org1491cce" class="outline-4">
+<h4 id="org1491cce">My code is ready to be pushed</h4>
+<div class="outline-text-4" id="text-org1491cce">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/vagrant/vagrant-multihost
 </pre>
@@ -17673,9 +17765,9 @@ vagrant-multihost
 </div>
 </div>
 
-<div id="outline-container-org35f7c06" class="outline-4">
-<h4 id="org35f7c06">Testing your SSH connection</h4>
-<div class="outline-text-4" id="text-org35f7c06">
+<div id="outline-container-org22da3c6" class="outline-4">
+<h4 id="org22da3c6">Testing your SSH connection</h4>
+<div class="outline-text-4" id="text-org22da3c6">
 <p>
 Click on a repository and select <b>Clone</b>, you should see an <b>ssh</b> URL in addition to <b>http</b> in the pulldown menu.
 </p>
@@ -17685,40 +17777,40 @@ Click on a repository and select <b>Clone</b>, you should see an <b>ssh</b> URL 
 </div>
 
 
-<div id="outline-container-orga2684d2" class="outline-2">
-<h2 id="orga2684d2"><span class="section-number-2">11</span> ToDo</h2>
-<div class="outline-text-2" id="text-11">
+<div id="outline-container-org8e5be85" class="outline-2">
+<h2 id="org8e5be85"><span class="section-number-2">12</span> ToDo</h2>
+<div class="outline-text-2" id="text-12">
 </div>
-<div id="outline-container-org4076b81" class="outline-3">
-<h3 id="org4076b81"><span class="section-number-3">11.1</span> Atomic Developer Bundle</h3>
-<div class="outline-text-3" id="text-11-1">
+<div id="outline-container-org65e61b7" class="outline-3">
+<h3 id="org65e61b7"><span class="section-number-3">12.1</span> Atomic Developer Bundle</h3>
+<div class="outline-text-3" id="text-12-1">
 <p>
 <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">https://github.com/projectatomic/adb-atomic-developer-bundle</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org5f4d30b" class="outline-3">
-<h3 id="org5f4d30b"><span class="section-number-3">11.2</span> Ansible Container</h3>
-<div class="outline-text-3" id="text-11-2">
+<div id="outline-container-orgfaa4b0c" class="outline-3">
+<h3 id="orgfaa4b0c"><span class="section-number-3">12.2</span> Ansible Container</h3>
+<div class="outline-text-3" id="text-12-2">
 <p>
 <a href="https://www.ansible.com/integrations/containers/ansible-container">https://www.ansible.com/integrations/containers/ansible-container</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org71a1ccb" class="outline-3">
-<h3 id="org71a1ccb"><span class="section-number-3">11.3</span> OpenShift-Ansible</h3>
-<div class="outline-text-3" id="text-11-3">
+<div id="outline-container-orgc3a5920" class="outline-3">
+<h3 id="orgc3a5920"><span class="section-number-3">12.3</span> OpenShift-Ansible</h3>
+<div class="outline-text-3" id="text-12-3">
 <p>
 <a href="https://github.com/openshift/openshift-ansible">https://github.com/openshift/openshift-ansible</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org8981424" class="outline-3">
-<h3 id="org8981424"><span class="section-number-3">11.4</span> OpenShift Origin</h3>
-<div class="outline-text-3" id="text-11-4">
+<div id="outline-container-org32ca974" class="outline-3">
+<h3 id="org32ca974"><span class="section-number-3">12.4</span> OpenShift Origin</h3>
+<div class="outline-text-3" id="text-12-4">
 <p>
 <a href="https://emarcel.com/installing-openshift-origin-in-a-home-lab/">https://emarcel.com/installing-openshift-origin-in-a-home-lab/</a>
 </p>
@@ -17727,17 +17819,17 @@ Click on a repository and select <b>Clone</b>, you should see an <b>ssh</b> URL 
 </div>
 
 
-<div id="outline-container-org4aa468f" class="outline-2">
-<h2 id="org4aa468f"><span class="section-number-2">12</span> Misc</h2>
-<div class="outline-text-2" id="text-12">
+<div id="outline-container-orgc518d19" class="outline-2">
+<h2 id="orgc518d19"><span class="section-number-2">13</span> Misc</h2>
+<div class="outline-text-2" id="text-13">
 </div>
-<div id="outline-container-orgc3d5bf1" class="outline-3">
-<h3 id="orgc3d5bf1"><span class="section-number-3">12.1</span> Installing the Windows Subsystem for Linux</h3>
-<div class="outline-text-3" id="text-12-1">
+<div id="outline-container-org14e0275" class="outline-3">
+<h3 id="org14e0275"><span class="section-number-3">13.1</span> Installing the Windows Subsystem for Linux</h3>
+<div class="outline-text-3" id="text-13-1">
 </div>
-<div id="outline-container-org8c9efb2" class="outline-4">
-<h4 id="org8c9efb2">Enable the Windows Subsystem Linux (WLS)</h4>
-<div class="outline-text-4" id="text-org8c9efb2">
+<div id="outline-container-org54c396a" class="outline-4">
+<h4 id="org54c396a">Enable the Windows Subsystem Linux (WLS)</h4>
+<div class="outline-text-4" id="text-org54c396a">
 <p>
 In PowerShell
 </p>
@@ -17760,9 +17852,9 @@ Download distros from <a href="https://docs.microsoft.com/en-us/windows/wsl/inst
 </div>
 </div>
 
-<div id="outline-container-org334c783" class="outline-5">
-<h5 id="org334c783">Ubuntu</h5>
-<div class="outline-text-5" id="text-org334c783">
+<div id="outline-container-org7406517" class="outline-5">
+<h5 id="org7406517">Ubuntu</h5>
+<div class="outline-text-5" id="text-org7406517">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/download &amp;&amp; curl.exe -L -o ubuntu-1804.appx https://aka.ms/wsl-ubuntu-1804
 </pre>
@@ -17777,9 +17869,9 @@ Download distros from <a href="https://docs.microsoft.com/en-us/windows/wsl/inst
 </div>
 </div>
 
-<div id="outline-container-org0179c70" class="outline-5">
-<h5 id="org0179c70">Debian GNU/Linux</h5>
-<div class="outline-text-5" id="text-org0179c70">
+<div id="outline-container-org7089cb5" class="outline-5">
+<h5 id="org7089cb5">Debian GNU/Linux</h5>
+<div class="outline-text-5" id="text-org7089cb5">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/download &amp;&amp; curl.exe -L -o debian.appx https://aka.ms/wsl-debian-gnulinux
 </pre>
@@ -17787,9 +17879,9 @@ Download distros from <a href="https://docs.microsoft.com/en-us/windows/wsl/inst
 </div>
 </div>
 
-<div id="outline-container-orgc6d1be4" class="outline-5">
-<h5 id="orgc6d1be4">Kali Linux</h5>
-<div class="outline-text-5" id="text-orgc6d1be4">
+<div id="outline-container-org94b055a" class="outline-5">
+<h5 id="org94b055a">Kali Linux</h5>
+<div class="outline-text-5" id="text-org94b055a">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/download &amp;&amp; curl.exe -L -o kali.appx https://aka.ms/wsl-kali-linux
 </pre>
@@ -17797,9 +17889,9 @@ Download distros from <a href="https://docs.microsoft.com/en-us/windows/wsl/inst
 </div>
 </div>
 
-<div id="outline-container-orge7df7db" class="outline-5">
-<h5 id="orge7df7db">OpenSUSE</h5>
-<div class="outline-text-5" id="text-orge7df7db">
+<div id="outline-container-org161c2b7" class="outline-5">
+<h5 id="org161c2b7">OpenSUSE</h5>
+<div class="outline-text-5" id="text-org161c2b7">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/download &amp;&amp; curl.exe -L -o opensuse-42.appx https://aka.ms/wsl-opensuse-42
 </pre>
@@ -17807,9 +17899,9 @@ Download distros from <a href="https://docs.microsoft.com/en-us/windows/wsl/inst
 </div>
 </div>
 
-<div id="outline-container-org4146a37" class="outline-5">
-<h5 id="org4146a37">SLES</h5>
-<div class="outline-text-5" id="text-org4146a37">
+<div id="outline-container-orge3542e1" class="outline-5">
+<h5 id="orge3542e1">SLES</h5>
+<div class="outline-text-5" id="text-orge3542e1">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/download &amp;&amp; curl.exe -L -o sles-12.appx https://aka.ms/wsl-sles-12
 </pre>
@@ -17818,9 +17910,9 @@ Download distros from <a href="https://docs.microsoft.com/en-us/windows/wsl/inst
 </div>
 </div>
 
-<div id="outline-container-org09136cf" class="outline-4">
-<h4 id="org09136cf">Initialize</h4>
-<div class="outline-text-4" id="text-org09136cf">
+<div id="outline-container-orgf146d26" class="outline-4">
+<h4 id="orgf146d26">Initialize</h4>
+<div class="outline-text-4" id="text-orgf146d26">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #483d8b;">cd</span> /misc/download
 </pre>
@@ -17857,9 +17949,9 @@ Do the same for the other distributions.
 </div>
 </div>
 
-<div id="outline-container-orgdb82d56" class="outline-4">
-<h4 id="orgdb82d56">winpty</h4>
-<div class="outline-text-4" id="text-orgdb82d56">
+<div id="outline-container-org69b49be" class="outline-4">
+<h4 id="org69b49be">winpty</h4>
+<div class="outline-text-4" id="text-org69b49be">
 <p>
 winpty is a Windows software package providing an interface similar to a Unix
 pty-master for communicating with Windows console programs. The package consists
@@ -17878,9 +17970,9 @@ Unpack to <code>/usr/local</code> folder but without the <b>winpty-0.4.3-cygwin-
 </div>
 </div>
 
-<div id="outline-container-org125dfdb" class="outline-4">
-<h4 id="org125dfdb">Symlinks</h4>
-<div class="outline-text-4" id="text-org125dfdb">
+<div id="outline-container-org6c535b9" class="outline-4">
+<h4 id="org6c535b9">Symlinks</h4>
+<div class="outline-text-4" id="text-org6c535b9">
 <div class="org-src-container">
 <pre class="src src-bash">ln -s /cygdrive/c/Windows/System32/wsl /usr/local/bin/wsl
 </pre>
@@ -17893,9 +17985,9 @@ Unpack to <code>/usr/local</code> folder but without the <b>winpty-0.4.3-cygwin-
 </div>
 </div>
 
-<div id="outline-container-org1535ee8" class="outline-4">
-<h4 id="org1535ee8">Managed distros</h4>
-<div class="outline-text-4" id="text-org1535ee8">
+<div id="outline-container-org18388cb" class="outline-4">
+<h4 id="org18388cb">Managed distros</h4>
+<div class="outline-text-4" id="text-org18388cb">
 <pre class="example">
 winpty wslconfig /list /all
 </pre>
@@ -17911,9 +18003,9 @@ Debian
 </div>
 </div>
 
-<div id="outline-container-org558e660" class="outline-4">
-<h4 id="org558e660">Unregistering a distro</h4>
-<div class="outline-text-4" id="text-org558e660">
+<div id="outline-container-org1381d9e" class="outline-4">
+<h4 id="org1381d9e">Unregistering a distro</h4>
+<div class="outline-text-4" id="text-org1381d9e">
 <pre class="example">
 winpty wslconfig /unregister Ubuntu-18.04
 </pre>
@@ -17924,9 +18016,9 @@ winpty wslconfig /unregister Ubuntu-18.04
 </div>
 </div>
 
-<div id="outline-container-org3fccba8" class="outline-4">
-<h4 id="org3fccba8">Call WSL from emacs running in Cygwin</h4>
-<div class="outline-text-4" id="text-org3fccba8">
+<div id="outline-container-org898b062" class="outline-4">
+<h4 id="org898b062">Call WSL from emacs running in Cygwin</h4>
+<div class="outline-text-4" id="text-org898b062">
 <div class="org-src-container">
 <pre class="src src-bash">winpty wsl ps -ef
 </pre>
@@ -18123,9 +18215,9 @@ sudo dbus-uuidgen &gt; /etc/machine-id
 </div>
 </div>
 
-<div id="outline-container-org3ca7f73" class="outline-3">
-<h3 id="org3ca7f73"><span class="section-number-3">12.2</span> Switching between Docker for Windows and VirtualBox on Windows 10</h3>
-<div class="outline-text-3" id="text-12-2">
+<div id="outline-container-orga5e1065" class="outline-3">
+<h3 id="orga5e1065"><span class="section-number-3">13.2</span> Switching between Docker for Windows and VirtualBox on Windows 10</h3>
+<div class="outline-text-3" id="text-13-2">
 <p>
 When using VirtualBox
 </p>
@@ -18163,9 +18255,9 @@ A reboot is required in both cases.
 </div>
 
 
-<div id="outline-container-org32d881e" class="outline-2">
-<h2 id="org32d881e"><span class="section-number-2">13</span> Test</h2>
-<div class="outline-text-2" id="text-13">
+<div id="outline-container-org3a66191" class="outline-2">
+<h2 id="org3a66191"><span class="section-number-2">14</span> Test</h2>
+<div class="outline-text-2" id="text-14">
 <div class="warning">
 <p>
 Please ignore everything in this chapter&#x2026;
@@ -18244,7 +18336,7 @@ UID from Registry with cygwin tools
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dr. Volker Zell</p>
-<p class="date">Created: 2018-11-17 Sat 20:51</p>
+<p class="date">Created: 2018-11-21 Wed 10:22</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
