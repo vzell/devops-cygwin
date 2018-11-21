@@ -1858,6 +1858,120 @@ echo $PATH
 # /usr/bin:/usr/local/bin:/opt/vagrant/bin:/cygdrive/c/ProgramData/chocolatey/bin:/cygdrive/c/WINDOWS/System32/WindowsPowerShell/v1.0:/cygdrive/c/Windows/System32/wbem
 #+end_example
 
+*** Installing Openshift CLI
+
+#+begin_src bash
+choco info openshift-cli
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# openshift-cli 3.11.0 [Approved]
+#  Title: OpenShift Command Line Interface (CLI) | Published: 11.10.2018
+#  Package approved as a trusted package on Okt 11 2018 18:56:19.
+#  Package testing status: Passing on Okt 11 2018 18:47:13.
+#  Number of Downloads: 2813 | Downloads for this version: 119
+#  Package url
+#  Chocolatey Package Source: https://github.com/chocolatey/chocolatey-coreteampackages/tree/master/automatic/openshift-cli
+#  Package Checksum: 'UYIee1fuINkhiLoFKITt2GKWKDOs9sXcHQHKQ+QTG5ZGAUSthF4fUKJLiR243Ax7DRDl/kMM2QK7CHVQorE6Aw==' (SHA512)
+#  Tags: openshift docker kubernetes containers development devops cli foss
+#  Software Site: http://www.openshift.org/
+#  Software License: https://github.com/openshift/origin/blob/master/LICENSE
+#  Software Source: https://github.com/openshift/origin
+#  Documentation: https://docs.openshift.org/latest/welcome/index.html
+#  Mailing List: https://lists.openshift.redhat.com/openshiftmm/listinfo
+#  Issues: https://github.com/openshift/origin/issues
+#  Summary: OpenShift Origin is a distribution of Kubernetes optimized for continuous application development and multi-tenant deployment. OpenShift Origin is the open source upstream project that powers OpenShift, Red Hat's container application platform.
+#  Description: ## OpenShift Application Platform
+#   ### The Open Source Container Application Platform - Enterprise Kubernetes for Developers
+#   
+#   OpenShift Origin is a distribution of Kubernetes optimized for continuous application development and multi-tenant deployment. OpenShift adds developer and operations-centric tools on top of Kubernetes to enable rapid application development, easy deployment and scaling, and long-term lifecycle maintenance for small and large teams.
+#   
+#   Origin is the upstream community project that powers OpenShift. Built around a core of Docker container packaging and Kubernetes container cluster management, Origin is also augmented by application lifecycle management functionality and DevOps tooling. Origin provides a complete open source container application platform.
+#   
+#   ## Features
+#   * Easily build applications with integrated service discovery and persistent storage.
+#   * Quickly and easily scale applications to handle periods of increased demand.
+#     * Support for automatic high availability, load balancing, health checking, and failover.
+#   * Push source code to your Git repository and automatically deploy containerized applications.
+#   * Web console and command-line client for building and monitoring applications.
+#   * Centralized administration and management of an entire stack, team, or organization.
+#     * Create reusable templates for components of your system, and iteratively deploy them over time.
+#     * Roll out modifications to software stacks to your entire organization in a controlled fashion.
+#     * Integration with your existing authentication mechanisms, including LDAP, Active Directory, and public OAuth providers such as GitHub.
+#   * Multi-tenancy support, including team and user isolation of containers, builds, and network communication.
+#     * Allow developers to run containers securely with fine-grained controls in production.
+#     * Limit, track, and manage the developers and teams on the platform.
+#   * Integrated Docker registry, automatic edge load balancing, cluster logging, and integrated metrics.
+#   
+#   #### Note: Windows support is limited to 64bit systems.
+#  Release Notes: https://github.com/openshift/origin/releases/tag/v3.11.0
+# 
+# 1 packages found.
+#+end_example
+
+#+begin_src bash
+sudo choco install openshift-cli
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# Installing the following packages:
+# openshift-cli
+# By installing you accept licenses for the packages.
+# Progress: Downloading openshift-cli 3.11.0... 100%
+# 
+# openshift-cli v3.11.0 [Approved]
+# openshift-cli package files install completed. Performing other installation steps.
+# Extracting 64-bit C:\ProgramData\chocolatey\lib\openshift-cli\tools\openshift-origin-client-tools.zip to C:\ProgramData\chocolatey\lib\openshift-cli\tools...
+# C:\ProgramData\chocolatey\lib\openshift-cli\tools
+#  ShimGen has successfully created a shim for kubectl.exe
+#  ShimGen has successfully created a shim for oc.exe
+#  The install of openshift-cli was successful.
+#   Software installed to 'C:\ProgramData\chocolatey\lib\openshift-cli\tools'
+# 
+# Chocolatey installed 1/1 packages. 
+#  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+#+end_example
+
+#+begin_src bash
+kubectl version
+#+end_src
+
+#+begin_example
+# Client Version: version.Info{Major:"1", Minor:"11+", GitVersion:"v1.11.0+d4cacc0", GitCommit:"d4cacc0", GitTreeState:"clean", BuildDate:"2018-10-10T16:38:01Z", GoVersion:"go1.10.3", Compiler:"gc", Platform:"windows/amd64"}
+# Unable to connect to the server: dial tcp 192.168.99.100:8443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+#+end_example
+
+With a running *Minishift* your would get
+
+#+begin_example
+# Client Version: version.Info{Major:"1", Minor:"11+", GitVersion:"v1.11.0+d4cacc0", GitCommit:"d4cacc0", GitTreeState:"clean", BuildDate:"2018-10-10T16:38:01Z", GoVersion:"go1.10.3", Compiler:"gc", Platform:"windows/amd64"}
+# Server Version: version.Info{Major:"1", Minor:"11+", GitVersion:"v1.11.0+d4cacc0", GitCommit:"d4cacc0", GitTreeState:"clean", BuildDate:"2018-11-15T02:24:36Z", GoVersion:"go1.10.3", Compiler:"gc", Platform:"linux/amd64"}
+#+end_example
+
+#+begin_src bash
+oc version
+#+end_src
+
+#+begin_example
+# oc v3.11.0+0cbc58b
+# kubernetes v1.11.0+d4cacc0
+# features: Basic-Auth SSPI Kerberos SPNEGO
+# error: server took too long to respond with version information.
+#+end_example
+
+With a running *Minishift* your would get
+
+#+begin_example
+# oc v3.11.0+0cbc58b
+# kubernetes v1.11.0+d4cacc0
+# features: Basic-Auth SSPI Kerberos SPNEGO
+# 
+# Server https://192.168.99.100:8443
+# kubernetes v1.11.0+d4cacc0
+#+end_example
+
 *** Upgrading choco installed packages
 
 Whenever you need to update choco installed packages use
