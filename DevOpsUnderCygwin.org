@@ -352,6 +352,8 @@ export PATH=/usr/bin:/usr/local/bin:/opt/vagrant/bin:/cygdrive/c/ProgramData/cho
 
 # Vagrant
 export VAGRANT_HOME="D:\misc\vagrant\.vagrant.d"
+# Docker client
+export DOCKER_CONFIG="D:\misc\docker\.docker"
 # Kubectl
 export KUBECONFIG="D:\misc\kubernetes\.kube\config"
 # Minicube
@@ -1342,6 +1344,34 @@ docker --version
 
 #+begin_example
 # Docker version 18.06.1-ce, build 67f9a391
+#+end_example
+
+*** Configuring Docker client
+
+#+begin_src bash
+mkdir -p /misc/docker/.docker
+#+end_src
+
+#+begin_info
+If you followed the step to setup cygwin by adding/changing all tutorial related
+environment variables, you don't need this step anymore. Just check with the
+below statements.
+#+end_info
+
+Include *export DOCKER_CONFIG="D:\misc\docker\.docker"* (yes, it should be in
+Windows syntax) in your *~/.bashrc* file. It specifies the location of your
+client configuration files.
+
+#+begin_src bash
+source ~/.bashrc
+#+end_src
+
+#+begin_src bash
+env | grep DOCKER_CONFIG
+#+end_src
+
+#+begin_example
+# DOCKER_CONFIG=D:\misc\docker\.docker
 #+end_example
 
 *** Installing Docker-machine
