@@ -352,6 +352,7 @@ export PATH=/usr/bin:/usr/local/bin:/opt/vagrant/bin:/cygdrive/c/ProgramData/cho
 
 # Vagrant
 export VAGRANT_HOME="D:\misc\vagrant\.vagrant.d"
+export VAGRANT_DETECTED_OS=cygwin
 # Docker client
 export DOCKER_CONFIG="D:\misc\docker\.docker"
 # Kubectl
@@ -1155,6 +1156,9 @@ Windows syntax) in your *~/.bashrc* file where *Vagrant* stores global state. Th
 Vagrant home directory is where things such as boxes are stored, so it can
 actually become quite large on disk.
 
+Include *export VAGRANT_DETECTED_OS=cygwin* to get color support in vagrant output
+under *cygwin*.
+
 #+begin_src bash
 source ~/.bashrc
 #+end_src
@@ -1164,6 +1168,7 @@ env | grep VAGRANT
 #+end_src
 
 #+begin_example
+# VAGRANT_DETECTED_OS=cygwin
 # VAGRANT_HOME=D:\misc\vagrant\.vagrant.d
 #+end_example
 
