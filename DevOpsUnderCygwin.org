@@ -1294,6 +1294,7 @@ terraform --version
 #+end_example
 
 *** Installing Docker client 
+**** Old
 
 #+begin_src bash
 choco info docker
@@ -1360,7 +1361,39 @@ docker --version
 # Docker version 18.06.1-ce, build 67f9a391
 #+end_example
 
-*** Configuring Docker client
+**** New
+
+#+begin_src bash
+choco info docker-cli
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker-cli 18.09.0 [Approved] Downloads cached for licensed users
+#  Title: Docker CLI | Published: 03.12.2018
+#  Package approved by gep13 on Dez 04 2018 09:52:33.
+#  Package testing status: Passing on Dez 03 2018 10:18:45.
+#  Number of Downloads: 10745 | Downloads for this version: 10718
+#  Package url
+#  Chocolatey Package Source: https://github.com/StefanScherer/choco-docker-cli
+#  Package Checksum: '0JBGjKuJHpUpf6uBpdqWBfo05oNx3iTb6N4XVA5WH3+JILS+LqUXa0mpxHqRfDw94/7bxy5p6gP+ZjlMcYvDgw==' (SHA512)
+#  Tags: docker devops containers
+#  Software Site: https://www.docker.com/
+#  Software License: http://www.apache.org/licenses/LICENSE-2.0
+#  Software Source: https://github.com/docker/cli
+#  Documentation: https://docs.docker.com/engine/reference/commandline/cli/
+#  Mailing List: https://github.com/docker/docker#talking-to-other-docker-users-and-contributors
+#  Issues: https://github.com/docker/cli/issues
+#  Summary: Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications.
+#  Description: Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications. This package contains the docker client for Windows and not the Docker engine to run containers on Windows hosts.
+#   
+#   NOTE: Docker client for Windows is not a Docker container engine for Windows. You can use this to manage your Linux and Windows machines running as Docker hosts. You might want to have a look at the "docker-desktop" package.
+#  Release Notes: Updated to the latest Docker version.
+# 
+# 1 packages found.
+#+end_example
+
+*** Configuring Docker Client
 
 #+begin_src bash
 mkdir -p /misc/docker/.docker
@@ -1388,7 +1421,7 @@ env | grep DOCKER_CONFIG
 # DOCKER_CONFIG=D:\misc\docker\.docker
 #+end_example
 
-*** Installing Docker-machine
+*** Installing Docker Machine
 
 #+begin_src bash
 choco info docker-machine
@@ -1455,7 +1488,7 @@ docker-machine --version
 # docker-machine.exe version 0.15.0, build b48dc28d
 #+end_example
 
-*** Configuring Docker-machine
+*** Configuring Docker Machine
 
 #+begin_src bash
 mkdir -p /misc/docker/.docker
@@ -1483,7 +1516,7 @@ env | grep MACHINE_STORAGE_PATH
 # MACHINE_STORAGE_PATH=D:\misc\docker\.docker
 #+end_example
 
-*** Installing Docker-compose
+*** Installing Docker Compose
 
 #+begin_src bash
 choco info docker-compose
@@ -2600,6 +2633,14 @@ choco info kubernetes-cli
 #+end_example
 
 #+begin_src bash
+cp -v /cygdrive/c/ProgramData/chocolatey/bin/kubectl.exe /usr/local/bin/kubectl-1.11.0.exe
+#+end_src
+
+#+begin_example
+# '/cygdrive/c/ProgramData/chocolatey/bin/kubectl.exe' -> '/usr/local/bin/kubectl-1.11.0.exe'
+#+end_example
+
+#+begin_src bash
 sudo choco upgrade kubernetes-cli
 #+end_src
 
@@ -2633,6 +2674,321 @@ kubectl version
 #+begin_example
 # Client Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.4", GitCommit:"c27b913fddd1a6c480c229191a087698aa92f0b1", GitTreeState:"clean", BuildDate:"2019-02-28T13:37:52Z", GoVersion:"go1.11.5", Compiler:"gc", Platform:"windows/amd64"}
 # Unable to connect to the server: dial tcp 192.168.99.100:8443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+#+end_example
+
+**** Upgrade Docker Client - choco package *docker* to *docker-cli*
+
+#+begin_src bash
+choco list --local-only docker
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker 18.06.1
+# docker-compose 1.22.0
+# docker-machine 0.15.0
+# kubernetes-cli 1.13.4
+# minikube 0.30.0
+# minishift 1.26.1
+# openshift-cli 3.11.0
+# 7 packages installed.
+#+end_example
+
+#+begin_src bash
+cp -v /cygdrive/c/ProgramData/chocolatey/bin/docker.exe /usr/local/bin/docker-18.06.1.exe
+#+end_src
+
+#+begin_example
+# '/cygdrive/c/ProgramData/chocolatey/bin/docker.exe' -> '/usr/local/bin/docker-18.06.1.exe'
+#+end_example
+
+#+begin_src bash
+choco info docker
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker 99.0.0 [Approved]
+#  Title: [Deprecated] Docker CLI | Published: 21.01.2019
+#  Package approved as a trusted package on Mrz 26 2019 06:55:46.
+#  Package testing status: Passing on Jan 21 2019 07:20:55.
+#  Number of Downloads: 144863 | Downloads for this version: 10151
+#  Package url
+#  Chocolatey Package Source: https://github.com/ahmetb/docker-chocolatey
+#  Package Checksum: 'tW2eiyO4Wc3X0Eud56r0yCadmEEoyhEuGOwm+MHtEElQ2hC/jTBiMZSppPVW8+25TXgKWumAm+nsEObax/w4Tg==' (SHA512)
+#  Tags: docker devops containers
+#  Software Site: https://www.docker.com/
+#  Software License: http://www.apache.org/licenses/LICENSE-2.0
+#  Software Source: https://github.com/docker/cli
+#  Documentation: https://docs.docker.com/engine/reference/commandline/cli/
+#  Mailing List: https://github.com/docker/docker#talking-to-other-docker-users-and-contributors
+#  Issues: https://github.com/docker/cli/issues
+#  Summary: This package is replaced by `docker-cli` to make it more obvious what's getting installed.
+#  Description: This package is replaced by `docker-cli` to make it more obvious what's getting installed.
+#  Release Notes: Updated to the latest Docker version.
+# 
+# 1 packages found.
+#+end_example
+
+#+begin_src bash
+choco info docker-cli
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker-cli 18.09.0 [Approved] Downloads cached for licensed users
+#  Title: Docker CLI | Published: 03.12.2018
+#  Package approved by gep13 on Dez 04 2018 09:52:33.
+#  Package testing status: Passing on Dez 03 2018 10:18:45.
+#  Number of Downloads: 10745 | Downloads for this version: 10718
+#  Package url
+#  Chocolatey Package Source: https://github.com/StefanScherer/choco-docker-cli
+#  Package Checksum: '0JBGjKuJHpUpf6uBpdqWBfo05oNx3iTb6N4XVA5WH3+JILS+LqUXa0mpxHqRfDw94/7bxy5p6gP+ZjlMcYvDgw==' (SHA512)
+#  Tags: docker devops containers
+#  Software Site: https://www.docker.com/
+#  Software License: http://www.apache.org/licenses/LICENSE-2.0
+#  Software Source: https://github.com/docker/cli
+#  Documentation: https://docs.docker.com/engine/reference/commandline/cli/
+#  Mailing List: https://github.com/docker/docker#talking-to-other-docker-users-and-contributors
+#  Issues: https://github.com/docker/cli/issues
+#  Summary: Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications.
+#  Description: Docker is an open platform for developers and sysadmins to build, ship, and run distributed applications. This package contains the docker client for Windows and not the Docker engine to run containers on Windows hosts.
+#   
+#   NOTE: Docker client for Windows is not a Docker container engine for Windows. You can use this to manage your Linux and Windows machines running as Docker hosts. You might want to have a look at the "docker-desktop" package.
+#  Release Notes: Updated to the latest Docker version.
+# 
+# 1 packages found.
+#+end_example
+
+#+begin_src bash
+sudo choco uninstall docker
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# Uninstalling the following packages:
+# docker
+# 
+# docker v18.06.1
+#  Skipping auto uninstaller - No registry snapshot.
+#  docker has been successfully uninstalled.
+# 
+# Chocolatey uninstalled 1/1 packages. 
+#  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+# 
+# Enjoy using Chocolatey? Explore more amazing features to take your
+# experience to the next level at
+#  https://chocolatey.org/compare
+#+end_example
+
+#+begin_src bash
+sudo choco install docker-cli
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# Installing the following packages:
+# docker-cli
+# By installing you accept licenses for the packages.
+# Progress: Downloading docker-cli 18.09.0... 100%
+# 
+# docker-cli v18.09.0 [Approved]
+# docker-cli package files install completed. Performing other installation steps.
+# Downloading docker-cli 64 bit
+#   from 'https://github.com/StefanScherer/docker-cli-builder/releases/download/18.09.0/docker.exe'
+# Progress: 100% - Completed download of C:\ProgramData\chocolatey\lib\docker-cli\tools\docker.exe (60.24 MB).
+# Download of docker.exe (60.24 MB) completed.
+# Hashes match.
+# C:\ProgramData\chocolatey\lib\docker-cli\tools\docker.exe
+#  ShimGen has successfully created a shim for docker.exe
+#  The install of docker-cli was successful.
+#   Software install location not explicitly set, could be in package or
+#   default install location if installer.
+# 
+# Chocolatey installed 1/1 packages. 
+#  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+#+end_example
+
+#+begin_src bash
+docker --version
+#+end_src
+
+#+begin_example
+# Docker version 18.09.0, build 51668a30
+#+end_example
+
+**** Upgrade Docker Machine
+
+#+begin_src bash
+choco list --local-only docker-machine
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker-machine 0.15.0
+# 1 packages installed.
+#+end_example
+
+#+begin_src bash
+choco info docker-machine
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker-machine 0.16.0 [Approved] Downloads cached for licensed users
+#  Title: docker-machine | Published: 08.11.2018
+#  Package approved as a trusted package on Mrz 27 2019 18:17:35.
+#  Package testing status: Passing on Nov 08 2018 22:16:34.
+#  Number of Downloads: 44316 | Downloads for this version: 6782
+#  Package url
+#  Chocolatey Package Source: https://github.com/silarsis/choco-docker-machine
+#  Package Checksum: '+HcINtY9vEBAD1kejzuUW/XapxYZESZ3CG3deOobHJEYz62QSVf7heLbhh3EvBrXggHkkt0EANr5+lv9P15kOg==' (SHA512)
+#  Tags: docker-machine docker
+#  Software Site: https://github.com/docker/machine
+#  Software License: https://github.com/docker/machine/blob/master/LICENSE
+#  Software Source: https://github.com/docker/machine
+#  Documentation: https://docs.docker.com/machine/
+#  Issues: https://github.com/docker/machine/issues
+#  Summary: Machine management for a container-centric world
+#  Description: Machine lets you create Docker hosts on your computer, on cloud providers, and inside your own data center. It creates servers, installs Docker on them, then configures the Docker client to talk to them.
+#  Release Notes: https://github.com/docker/machine/releases
+# 
+# 1 packages found.
+#+end_example
+
+#+begin_src bash
+cp -v /cygdrive/c/ProgramData/chocolatey/bin/docker-machine.exe /usr/local/bin/docker-machine-0.15.0.exe
+#+end_src
+
+#+begin_example
+# '/cygdrive/c/ProgramData/chocolatey/bin/docker-machine.exe' -> '/usr/local/bin/docker-machine-0.15.0.exe'
+#+end_example
+
+#+begin_src bash
+sudo choco upgrade docker-machine
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# Upgrading the following packages:
+# docker-machine
+# By upgrading you accept licenses for the packages.
+# 
+# You have docker-machine v0.15.0 installed. Version 0.16.0 is available based on your source(s).
+# Progress: Downloading docker-machine 0.16.0... 100%
+# 
+# docker-machine v0.16.0 [Approved]
+# docker-machine package files upgrade completed. Performing other installation steps.
+# Removing old docker-machine plugins
+# C:\ProgramData\chocolatey\lib\docker-machine\bin
+# File appears to be downloaded already. Verifying with package checksum to determine if it needs to be redownloaded.
+# Error - hashes do not match. Actual value was '5AF3952CBD571B37F8FD74FA8269BC2D8C38C521FFB0202CB4A71A315374F0DF'.
+# Downloading docker-machine 64 bit
+#   from 'https://github.com/docker/machine/releases/download/v0.16.0/docker-machine-Windows-x86_64.exe'
+# Progress: 100% - Completed download of C:\ProgramData\chocolatey\lib\docker-machine\bin\docker-machine.exe (27.25 MB).
+# Download of docker-machine.exe (27.25 MB) completed.
+# Hashes match.
+# C:\ProgramData\chocolatey\lib\docker-machine\bin\docker-machine.exe
+#  ShimGen has successfully created a shim for docker-machine.exe
+#  The upgrade of docker-machine was successful.
+#   Software install location not explicitly set, could be in package or
+#   default install location if installer.
+# 
+# Chocolatey upgraded 1/1 packages. 
+#  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+#+end_example
+
+#+begin_src bash
+docker-machine --version
+#+end_src
+
+#+begin_example
+# docker-machine.exe version 0.16.0, build 702c267f
+#+end_example
+
+**** Upgrade Docker Compose
+
+#+begin_src bash
+choco list --local-only docker-compose
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker-compose 1.22.0
+# 1 packages installed.
+#+end_example
+
+#+begin_src bash
+choco info docker-compose
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# docker-compose 1.23.2 [Approved] Downloads cached for licensed users
+#  Title: docker-compose | Published: 01.12.2018
+#  Package approved as a trusted package on Feb 25 2019 21:24:44.
+#  Package testing status: Passing on Dez 01 2018 15:08:06.
+#  Number of Downloads: 60591 | Downloads for this version: 7844
+#  Package url
+#  Chocolatey Package Source: https://github.com/StefanScherer/choco-docker-compose
+#  Package Checksum: '57vF+4nAudNZTac5r8pKl4JoBaLJPvQjy45Y51P79CgTHWiVzR2Rq9bIqtloRvZB9e4f5ncwHsGsOKzRi12u/g==' (SHA512)
+#  Tags: Docker Compose docker-compose
+#  Software Site: https://github.com/docker/compose
+#  Software License: https://github.com/docker/compose/blob/master/LICENSE
+#  Documentation: https://docs.docker.com/compose/
+#  Issues: https://github.com/docker/compose/issues
+#  Summary: Define and run multi-container applications with Docker.
+#  Description: Compose is a tool for defining and running multi-container applications with Docker. With Compose, you define a multi-container application in a single file, then spin your application up in a single command which does everything that needs to be done to get it running.
+# 
+# 1 packages found.
+#+end_example
+
+#+begin_src bash
+cp -v /cygdrive/c/ProgramData/chocolatey/lib/docker-compose/tools/docker-compose.exe /usr/local/bin/docker-compose-1.22.0.exe
+#+end_src
+
+#+begin_example
+# '/cygdrive/c/ProgramData/chocolatey/lib/docker-compose/tools/docker-compose.exe' -> '/usr/local/bin/docker-compose-1.22.0.exe'
+#+end_example
+
+#+begin_src bash
+sudo choco upgrade docker-compose
+#+end_src
+
+#+begin_example
+# Chocolatey v0.10.11
+# Upgrading the following packages:
+# docker-compose
+# By upgrading you accept licenses for the packages.
+# 
+# You have docker-compose v1.22.0 installed. Version 1.23.2 is available based on your source(s).
+# Progress: Downloading docker-compose 1.23.2... 100%
+# 
+# docker-compose v1.23.2 [Approved]
+# docker-compose package files upgrade completed. Performing other installation steps.
+# File appears to be downloaded already. Verifying with package checksum to determine if it needs to be redownloaded.
+# Error - hashes do not match. Actual value was 'A828B92E52D49427790B8EDE88072F3D21315DCA8123D789A5CEB0E01DC9890F'.
+# Downloading docker-compose 64 bit
+#   from 'https://github.com/docker/compose/releases/download/1.23.2/docker-compose-Windows-x86_64.exe'
+# Progress: 100% - Completed download of C:\ProgramData\chocolatey\lib\docker-compose\tools\docker-compose.exe (7.21 MB).
+# Download of docker-compose.exe (7.21 MB) completed.
+# Hashes match.
+# C:\ProgramData\chocolatey\lib\docker-compose\tools\docker-compose.exe
+#  ShimGen has successfully created a shim for docker-compose.exe
+#  The upgrade of docker-compose was successful.
+#   Software install location not explicitly set, could be in package or
+#   default install location if installer.
+# 
+# Chocolatey upgraded 1/1 packages. 
+#  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+#+end_example
+
+#+begin_src bash
+docker-compose --version
+#+end_src
+
+#+begin_example
+# docker-compose version 1.23.2, build 1110ad01
 #+end_example
 
 ** (Optional) Installing "virtualenv" with pip
